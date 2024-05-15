@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Crime Chart</title>
+    <title>Crime Chart and Map</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRkAqoiHgFRzQWABWx-8Kz7XHsYCsz348&callback=initMap&libraries=&v=weekly" defer></script>
+    <style>
+        #map { height: 400px; width: 100%; }
+    </style>
 </head>
 <body>
-    <canvas id="myChart" width="400" height="400"></canvas>
+    <h1>Crime Data Visualization</h1>
+    <div style="display:flex; justify-content:space-around;">
+        <canvas id="myChart" width="400" height="400"></canvas>
+        <div id="map"></div>
+    </div>
     <script>
         var ctx = document.getElementById('myChart').getContext('2d');
         var myChart = new Chart(ctx, {
@@ -28,6 +36,14 @@
                 }
             }
         });
+
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -34.397, lng: 150.644},
+                zoom: 8
+            });
+            // 추가적인 마커나 데이터 포인트를 맵에 표시하는 코드를 여기에 작성하세요.
+        }
     </script>
 </body>
 </html>
