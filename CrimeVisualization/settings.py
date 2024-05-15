@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crimes.apps.VisualizationConfig',
+    "board.apps.BoardConfig"
 ]
 
 MIDDLEWARE = [
