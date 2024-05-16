@@ -1,6 +1,6 @@
-<!-- templates/board/post_edit.html -->
+<!-- board/templates/board/post_edit.html -->
 
-<h2>New Post</h2>
+<h2>{% if form.instance.pk %}Edit{% else %}New{% endif %} Post</h2>
 <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
