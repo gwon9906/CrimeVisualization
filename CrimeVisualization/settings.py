@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crimes.apps.VisualizationConfig',
-    "board"
+    "board",
+    'accounts'
 ]
 
 MIDDLEWARE = [
@@ -78,8 +79,12 @@ WSGI_APPLICATION = 'CrimeVisualization.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'crime',  # RDS 인스턴스의 데이터베이스 이름
+        'USER': 'admin',  # RDS 인스턴스의 마스터 사용자 이름
+        'PASSWORD': 'lhg243601',  # RDS 인스턴스의 마스터 사용자 암호
+        'HOST': 'crime.cfrxs59tjqaj.ap-northeast-2.rds.amazonaws.com',  # RDS 인스턴스의 엔드포인트 (예: mydbinstance.xyz123abc.us-west-2.rds.amazonaws.com)
+        'PORT': '3306',  # MariaDB의 기본 포트 번호
     }
 }
 
