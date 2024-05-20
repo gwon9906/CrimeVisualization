@@ -12,7 +12,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       html {
-        background-color: #162b4e;
+        background-color: #1a202c;
       }
       .left {
         background: url("blue_mountain.jpg");
@@ -56,17 +56,19 @@
         <p class="text-center my-4">소셜 로그인</p>
         <div class="flex justify-around mb-4">
           <a
-            href="#"
+            href="{% provider_login_url 'naver' method='oauth2' %}"
             class="btn-naver bg-green-500 text-white py-2 px-4 rounded-md"
             >네이버</a
           >
+          <!-- 구글 로그인 버튼 -->
           <a
-            href="#"
+            href="{% provider_login_url 'google' method='oauth2' %}"
             class="btn-google bg-red-600 text-white py-2 px-4 rounded-md"
             >구글</a
           >
+          <!-- 카카오 로그인 버튼 -->
           <a
-            href="#"
+            href="{% provider_login_url 'kakao' method='oauth2' %}"
             class="btn-kakao bg-yellow-400 text-white py-2 px-4 rounded-md"
             >카카오</a
           >
