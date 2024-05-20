@@ -8,3 +8,4 @@ def crime_chart(request):
     categories = Counter([crime.category for crime in data])
     categories = sorted(categories.items())
     return render(request, 'crimes/chart.html', {'categories': categories})
+
