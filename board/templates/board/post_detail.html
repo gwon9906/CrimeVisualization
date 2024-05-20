@@ -10,6 +10,42 @@
     />
     <script src="https://cdn.tailwindcss.com"></script>
     <title>부산 치안 지킴이</title>
+    <style>
+      #text > ul {
+        list-style-type: disc;
+      }
+
+      #text > ol {
+        list-style-type: ordered;
+      }
+
+      #text > thead,
+      tfoot,
+      th,
+      td {
+        border: 1px solid rgb(160 160 160);
+        padding: 8px 10px;
+      }
+
+      #text > h1 {
+        font-size: 32px;
+        font-weight: 800;
+      }
+
+      #text > h2 {
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      #text > h3 {
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      #text > .marker {
+        background-color: #ffff00;
+      }
+    </style>
   </head>
   <body>
     <!-- board/templates/board/post_detail.html -->
@@ -103,10 +139,8 @@
         </div>
 
         <div class="flex flex-col lg:flex-row lg:space-x-12 pl">
-          <div
-            class="px-4 lg:px-0 mt-5 text-gray-700 text-lg leading-relaxed w-full lg:w-3/4"
-          >
-            <p class="pb-6">{{ post.content|linebreaksbr }}</p>
+          <div id="text" class="px-4 lg:px-0 mt-5 lg:w-3/4">
+            <p>{{ post.content|safe }}</p>
           </div>
 
           <div class="w-full lg:w-1/4 m-auto mt-12 max-w-screen-sm">
