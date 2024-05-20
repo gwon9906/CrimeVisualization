@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,6 +30,11 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -39,8 +45,26 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crimes.apps.VisualizationConfig',
     "board",
-    'accounts'
+    'accounts',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'rest_framework',  # Django REST framework
+    'rest_framework.authtoken',  # Token authentication
+    
+     
+    # 페이스북 등 추가하고싶은 것이 있다면 여기에 추가하면 됨.
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.kakao',
+    'allauth.socialaccount.providers.naver',
 ]
+
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = '/'  # 로그인 후 리다이렉트 될 경로
+ACCOUNT_LOGOUT_REDIRECT_URL = reverse_lazy('accountapp:login')
+ACCOUNT_LOGOUT_ON_GET = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -50,6 +74,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'CrimeVisualization.urls'
@@ -85,6 +110,10 @@ DATABASES = {
         'PASSWORD': 'lhg243601',  # RDS 인스턴스의 마스터 사용자 암호
         'HOST': 'crime.cfrxs59tjqaj.ap-northeast-2.rds.amazonaws.com',  # RDS 인스턴스의 엔드포인트 (예: mydbinstance.xyz123abc.us-west-2.rds.amazonaws.com)
         'PORT': '3306',  # MariaDB의 기본 포트 번호
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            'use_unicode': True,
+        },
     }
 }
 
