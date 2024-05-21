@@ -1,0 +1,88 @@
+{% load socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>부산 치안 지킴이</title>
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="https://www.police.go.kr/favicon.ico"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      html {
+        background-color: #1a202c;
+      }
+      .left {
+        background: url("blue_mountain.jpg");
+        background-size: cover;
+      }
+    </style>
+  </head>
+  <body class="flex items-center justify-center min-h-screen">
+    <div class="flex bg-white rounded-lg shadow-lg w-full max-w-4xl">
+      <div class="left w-1/2 h-128 rounded-l-lg"></div>
+      <div class="w-1/2 p-8 flex flex-col justify-center">
+        <h1 class="text-2xl font-bold text-center mb-8">로그인</h1>
+        <form class="space-y-4">
+          <input
+            type="text"
+            placeholder="ID"
+            class="block w-full p-2 border border-gray-300 rounded-md"
+          />
+          <input
+            type="text"
+            placeholder="Password"
+            class="block w-full p-2 border border-gray-300 rounded-md"
+          />
+          <div class="flex items-center">
+            <input type="checkbox" name="Remember me" class="mr-2" />
+            <span>아이디 저장</span>
+          </div>
+          <a
+            href="#"
+            class="btn-login block w-full bg-blue-500 text-white py-2 px-4 rounded-md text-center hover:bg-blue-600"
+            >로그인</a
+          >
+          <div class="text-right">
+            <a
+              href="Forget_Passworld.html"
+              class="text-blue-500 hover:underline"
+              >비밀번호를 잊어버리셨나요?</a
+            >
+          </div>
+        </form>
+        <p class="text-center my-4">소셜 로그인</p>
+        <div class="flex justify-around mb-4">
+          <!-- 네이버 로그인 버튼{% provider_login_url 'naver' method='oauth2' %}" -->
+          <a
+            href="#"
+            class="btn-naver bg-green-500 text-white py-2 px-4 rounded-md"
+            >네이버</a
+          >
+          <!-- 구글 로그인 버튼 -->
+          <a
+            href="{% provider_login_url 'google' method='oauth2' %}"
+            class="btn-google bg-red-600 text-white py-2 px-4 rounded-md"
+            >구글</a
+          >
+          <!-- 카카오 로그인 버튼{% provider_login_url 'kakao' method='oauth2' %} -->
+          <a
+            href="#"
+            class="btn-kakao bg-yellow-400 text-white py-2 px-4 rounded-md"
+            >카카오</a
+          >
+        </div>
+        <hr class="my-4" />
+        <p class="text-center">
+          계정이 없으신가요?
+          <a href="Register.html" class="text-blue-500 hover:underline"
+            >회원가입</a
+          >
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

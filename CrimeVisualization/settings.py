@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 from django.urls import reverse_lazy
 
@@ -51,8 +52,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'rest_framework',  # Django REST framework
-    'rest_framework.authtoken',  # Token authentication
-    
+    'rest_framework.authtoken',  # Token authentication    
      
     # 페이스북 등 추가하고싶은 것이 있다면 여기에 추가하면 됨.
     'allauth.socialaccount.providers.google',
@@ -60,11 +60,28 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.naver',
 ]
 
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
+
 SITE_ID = 1
 
 LOGIN_REDIRECT_URL = '/'  # 로그인 후 리다이렉트 될 경로
 ACCOUNT_LOGOUT_REDIRECT_URL = reverse_lazy('accountapp:login')
 ACCOUNT_LOGOUT_ON_GET = True
+
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -82,8 +99,7 @@ ROOT_URLCONF = 'CrimeVisualization.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -158,3 +174,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
