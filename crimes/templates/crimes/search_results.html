@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Search Results</h1>
+    <ul>
+        {% for data in crime_data %}
+            <li>{{ data.crime_type }} at {{ data.location }} on {{ data.date }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

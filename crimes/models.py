@@ -3,11 +3,14 @@ from django.utils import timezone
 
 
 # Create your models here.
-class Crime(models.Model):
-    date = models.DateTimeField()
-    category = models.CharField(max_length=100)
+
+class CrimeData(models.Model):
+    crime_id = models.AutoField(primary_key=True)
+    crime_type = models.CharField(max_length=255)
+    date = models.DateField()
     location = models.CharField(max_length=255)
-    description = models.TextField()
+    frequency = models.IntegerField()
+
     def __str__(self):
-        return self.category
+        return f"{self.crime_type} at {self.location} on {self.date}"
 

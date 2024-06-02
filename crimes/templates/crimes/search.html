@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Crime Data</title>
+</head>
+<body>
+    <h1>Search Crime Data</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="region">Region:</label>
+        <input type="text" id="region" name="region">
+        <button type="submit">Search</button>
+    </form>
+</body>
+</html>
