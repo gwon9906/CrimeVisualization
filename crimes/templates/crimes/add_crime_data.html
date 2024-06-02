@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Crime Data</title>
+</head>
+<body>
+    <h1>Add Crime Data</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="crime_type">Crime Type:</label>
+        <input type="text" id="crime_type" name="crime_type">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date">
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location">
+        <label for="frequency">Frequency:</label>
+        <input type="number" id="frequency" name="frequency">
+        <button type="submit">Add</button>
+    </form>
+</body>
+</html>
