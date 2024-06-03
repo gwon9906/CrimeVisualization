@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crimes.apps.VisualizationConfig',
     "board",
+    'login',
+    'signup',
     'accounts'
 ]
 
