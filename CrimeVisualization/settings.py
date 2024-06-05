@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crimes.apps.VisualizationConfig',
     "board",
-    'accounts'
+    'accounts',
+    "crime_map.apps.CrimeMapConfig"
 ]
 
 MIDDLEWARE = [

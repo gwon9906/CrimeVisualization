@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crime Map</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body, html { height: 100%; margin: 0; padding: 0; }
+        .navbar {
+            overflow: hidden;
+            background-color: #333;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        .navbar a:hover {
+            background: #ddd;
+            color: black;
+        }
+        .content {
+            display: flex;
+            flex-direction: column;
+            margin-top: 50px; /* Adjust based on navbar height */
+        }
+        .search-container {
+            padding: 10px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            border-radius: 5px;
+            margin: 10px;
+            z-index: 1000;
+        }
+        .search-container input {
+            width: 200px;
+            padding: 5px;
+            margin-right: 5px;
+        }
+        .button-container {
+            display: flex;
+            padding: 10px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            border-radius: 5px;
+            margin: 10px;
+            z-index: 1000;
+        }
+        .button-container button {
+            margin: 0 5px;
+            padding: 10px 15px;
+            border: none;
+            background: #007BFF;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .button-container button.active {
+            background: #0056b3;
+        }
+        #map {
+            flex-grow: 1;
+            height: calc(100vh - 200px); /* Adjust based on other elements' height */
+        }
+        .status {
+            padding: 10px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            border-radius: 5px;
+            margin: 10px;
+            z-index: 1000;
+        }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places,visualization"></script> <!-- YOUR_API_KEY를 발급받은 API 키로 변경하세요 -->
+</head>
+<body>
+    <div class="navbar">
+        <a href="{% url 'crime_map' %}">Crime Map</a>
+    </div>
+    <div class="content">
+        <div class="search-container">
+            <input id="search-input" type="text" placeholder="Search for a place">
+            <button onclick="searchPlace()">Search</button>
+        </div>
+        <div class="button-container">
+            <button id="btn-폭력" onclick="filterCrime('폭력')">폭력</button>
+            <button id="btn-성폭행" onclick="filterCrime('성폭행')">성폭행</button>
+            <button id="btn-절도" onclick="filterCrime('절도')">절도</button>
+            <button id="btn-살인" onclick="filterCrime('살인')">살인</button>
+            <button id="btn-강도" onclick="filterCrime('강도')">강도</button>
+        </div>
+        <div id="map"></div>
+        <div class="status">Select a crime type</div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var map;
+        var circles = [];
+        var activeCrimeType = null;
+        var searchMarker = null;
+        var crimeColors = {
+            '폭력': '#FF0000',    // 빨간색
+            '성폭행': '#00FF00',  // 초록색
+            '절도': '#0000FF',    // 파란색
+            '살인': '#FFFF00',    // 노란색
+            '강도': '#FF00FF'     // 자홍색
+        };
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 35.1796, lng: 129.0756 }, // 부산 중심 좌표
+                zoom: 12
+            });
+
+            // Load GeoJSON data
+            map.data.loadGeoJson('/static/busan_districts.geojson');
+
+            // Set the initial styling of the GeoJSON data
+            map.data.setStyle(function(feature) {
+                return {
+                    fillColor: 'transparent',
+                    fillOpacity: 0.0,
+                    strokeColor: 'grey',
+                    strokeWeight: 1
+                };
+            });
+        }
+
+        function updateMap(crimeType) {
+            $.getJSON(`/crime_map/crime_data/${crimeType}`, function(crimeData) {
+                // Remove existing circles
+                circles.forEach(function(circle) {
+                    circle.setMap(null);
+                });
+                circles = [];
+
+                var maxCount = Math.max(...crimeData.map(crime => crime.count));
+                var color = crimeColors[crimeType];
+
+                crimeData.forEach(function(crime) {
+                    var intensity = crime.count / maxCount;
+                    var fillColor = adjustColorIntensity(color, intensity);
+                    var radius = Math.sqrt(crime.count) * 100; // 반경 조정
+
+                    var circle = new google.maps.Circle({
+                        strokeColor: fillColor,
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        fillColor: fillColor,
+                        fillOpacity: 0.35,
+                        map: map,
+                        center: { lat: crime.lat, lng: crime.lng },
+                        radius: radius
+                    });
+
+                    circle.addListener('click', function() {
+                        var showDetails = confirm("상세 정보를 보시겠습니까?");
+                        if (showDetails) {
+                            var content = `<b>범죄 유형:</b> ${crimeType}<br><b>발생 횟수:</b> ${crime.count}<br><b>위치:</b> (${crime.lat}, ${crime.lng})`;
+                            var infowindow = new google.maps.InfoWindow({
+                                content: content
+                            });
+                            infowindow.setPosition(circle.getCenter());
+                            infowindow.open(map);
+                        }
+                    });
+
+                    circles.push(circle);
+                });
+
+                // Update GeoJSON layer with color
+                map.data.setStyle(function(feature) {
+                    var district = feature.getProperty('name');
+                    var count = 0;
+                    for (var i = 0; i < crimeData.length; i++) {
+                        if (crimeData[i].district === district) {
+                            count += crimeData[i].count;
+                        }
+                    }
+                    var intensity = count / maxCount;
+                    var fillColor = adjustColorIntensity(color, intensity);
+                    return {
+                        fillColor: count > 0 ? fillColor : 'transparent',
+                        fillOpacity: count > 0 ? 0.5 : 0.0,
+                        strokeColor: 'grey',
+                        strokeWeight: 1
+                    };
+                });
+
+                document.getElementById('status').innerText = crimeType + ' 필터가 적용 중 입니다';
+            });
+        }
+
+        function filterCrime(crimeType) {
+            var button = document.getElementById('btn-' + crimeType);
+            if (activeCrimeType === crimeType) {
+                resetMap();
+                activeCrimeType = null;
+                document.getElementById('status').innerText = 'Select a crime type';
+                button.classList.remove('active');
+                button.style.backgroundColor = '#007BFF';
+            } else {
+                updateMap(crimeType);
+                if (activeCrimeType) {
+                    var activeButton = document.getElementById('btn-' + activeCrimeType);
+                    activeButton.classList.remove('active');
+                    activeButton.style.backgroundColor = '#007BFF';
+                }
+                activeCrimeType = crimeType;
+                button.classList.add('active');
+                button.style.backgroundColor = crimeColors[crimeType];
+            }
+        }
+
+        function resetMap() {
+            map.data.setStyle(function(feature) {
+                return {
+                    fillColor: 'transparent',
+                    fillOpacity: 0.0,
+                    strokeColor: 'grey',
+                    strokeWeight: 1
+                };
+            });
+            circles.forEach(function(circle) {
+                circle.setMap(null);
+            });
+            circles = [];
+            if (searchMarker) {
+                searchMarker.setMap(null);
+            }
+        }
+
+        function adjustColorIntensity(color, intensity) {
+            var hex = color.replace('#', '');
+            var r = parseInt(hex.substring(0, 2), 16);
+            var g = parseInt(hex.substring(2, 4), 16);
+            var b = parseInt(hex.substring(4, 6), 16);
+
+            r = Math.floor(r * intensity);
+            g = Math.floor(g * intensity);
+            b = Math.floor(b * intensity);
+
+            return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+
+        function searchPlace() {
+            var input = document.getElementById('search-input').value;
+            var geocoder = new google.maps.Geocoder();
+
+            geocoder.geocode({ address: input }, function(results, status) {
+                if (status === 'OK') {
+                    map.setCenter(results[0].geometry.location);
+                    map.setZoom(14);
+
+                    if (searchMarker) {
+                        searchMarker.setMap(null);
+                    }
+
+                    searchMarker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location,
+                        title: input
+                    });
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+
+        // 초기 지도 로드
+        window.onload = initMap;
+    </script>
+</body>
+</html>
