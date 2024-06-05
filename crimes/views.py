@@ -16,13 +16,13 @@ class CrimeDataSystem:
             location=location,
             frequency=frequency
         )
-
-def search_crime_data_view(request):
-    if request.method == 'POST':
-        region = request.POST.get('region')
-        crime_data = CrimeDataSystem.search_crime_data(region)
-        return render(request, 'crimes/search_results.html', {'crime_data': crime_data})
-    return render(request, 'crimes/search.html')
+`
+def search_crime_data_view(request): # 검색 뷰
+    if request.method == 'POST':    # POST 요청이 들어왔을 때
+        region = request.POST.get('region') # region을 POST로 받아옴
+        crime_data = CrimeDataSystem.search_crime_data(region)  # CrimeDataSystem의 search_crime_data 메서드를 호출
+        return render(request, 'crimes/search_results.html', {'crime_data': crime_data})    # 검색 결과를 search_results.html에 전달
+    return render(request, 'crimes/search.html')    # GET 요청이 들어왔을 때는 search.html을 렌더링
 
 def add_crime_data_view(request):
     if request.method == 'POST':
