@@ -1,12 +1,61 @@
-<!-- templates/accounts/signup.html -->
-
-{% extends "base_generic.html" %}
-
-{% block content %}
-  <h2>Sign Up</h2>
-  <form method="post">
+{% extends "base_generic.html" %} {% block content %}
+<div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+  <h1 class="text-2xl font-bold mb-4 text-blue-500">회원 가입</h1>
+  <form method="post" class="space-y-4">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign Up</button>
+    <div>
+      <label
+        for="{{ form.username.id_for_label }}"
+        class="block text-sm font-medium text-gray-700"
+        >* 아이디</label
+      >
+      {{ form.username }} {% if form.username.errors %}
+      <div class="text-red-500 text-sm">{{ form.username.errors }}</div>
+      {% endif %}
+    </div>
+    <div>
+      <label
+        for="{{ form.name.id_for_label }}"
+        class="block text-sm font-medium text-gray-700"
+        >* 이름</label
+      >
+      {{ form.name }} {% if form.name.errors %}
+      <div class="text-red-500 text-sm">{{ form.name.errors }}</div>
+      {% endif %}
+    </div>
+    <div>
+      <label
+        for="{{ form.password1.id_for_label }}"
+        class="block text-sm font-medium text-gray-700"
+        >* 비밀번호</label
+      >
+      {{ form.password1 }} {% if form.password1.errors %}
+      <div class="text-red-500 text-sm">{{ form.password1.errors }}</div>
+      {% endif %}
+    </div>
+    <div>
+      <label
+        for="{{ form.password2.id_for_label }}"
+        class="block text-sm font-medium text-gray-700"
+        >* 비밀번호 확인</label
+      >
+      {{ form.password2 }} {% if form.password2.errors %}
+      <div class="text-red-500 text-sm">{{ form.password2.errors }}</div>
+      {% endif %}
+    </div>
+    <div class="flex space-x-4">
+      <a
+        href="{% url 'login' %}"
+        class="flex items-center justify-center w-1/2 bg-gray-700 text-white p-2 rounded-md hover:bg-gray-800"
+        >뒤로가기</a
+      >
+      <button
+        type="submit"
+        class="w-1/2 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
+      >
+        회원가입
+      </button>
+    </div>
   </form>
+</div>
 {% endblock %}
