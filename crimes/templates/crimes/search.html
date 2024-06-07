@@ -1,15 +1,212 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Search Crime Data</title>
-</head>
-<body>
-    <h1>Search Crime Data</h1>
-    <form method="post">
-        {% csrf_token %}
-        <label for="region">Region:</label>
-        <input type="text" id="region" name="region">
-        <button type="submit">Search</button>
-    </form>
-</body>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="https://www.police.go.kr/favicon.ico"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>부산 치안 지킴이</title>
+    <style>
+      #map {
+        display: flex;
+        justify-content: center;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-900">
+    <nav class="bg-gray-900 border-b-4 border-indigo-500">
+      <div
+        class="flex flex-wrap items-center justify-between max-w-screen-xl p-4 mx-auto"
+      >
+        <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+          <img
+            src="https://wikiwandv2-19431.kxcdn.com/_next/image?url=https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Korean_National_Police_Agency_Emblem.svg/langko-640px-Korean_National_Police_Agency_Emblem.svg.png&w=640&q=50"
+            class="h-8"
+            alt="police_png"
+          />
+          <span
+            class="self-center text-2xl font-semibold text-white whitespace-nowrap"
+            >부산 치안 지킴이</span
+          >
+        </a>
+
+        <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+          <ul
+            class="flex flex-col p-4 mt-4 font-medium bg-gray-900 border border-gray-700 rounded-lg md:p-0 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0"
+          >
+            <li class="mt-2">
+              <a
+                href="#"
+                class="block px-3 py-2 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0"
+                aria-current="page"
+                >메인</a
+              >
+            </li>
+            <li class="mt-2">
+              <a
+                href="#"
+                class="block px-3 py-2 text-white rounded md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 hover:text-white"
+                >마커</a
+              >
+            </li>
+            <li class="mt-2">
+              <a
+                href="#"
+                class="block px-3 py-2 text-white rounded md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 hover:text-white"
+                >게시판</a
+              >
+            </li>
+            <li class="mt-2">
+              <a
+                href="#"
+                class="block px-3 py-2 text-white rounded md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 hover:text-white"
+                >대시보드</a
+              >
+            </li>
+            <li class="flex items-center space-x-4 mt-2" id="login-info">
+              <!-- 로그인 상태에 따라 내용이 변경될 부분 -->
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <section>
+      <div
+        class="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-16 lg:px-12"
+      >
+        <h1
+          class="mb-8 text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-5xl"
+        >
+          시각화 된 범죄 데이터 및 정보를 제공
+        </h1>
+
+        <form class="max-w-md mx-auto">
+          {% csrf_token %}
+          <div class="relative" method="post">
+            <div
+              class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3"
+            ></div>
+            <input
+              type="text"
+              id="region"
+              class="block w-full p-4 text-sm placeholder-gray-400 bg-gray-700 border border-gray-600 rounded-lg ps-10 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="지역, 키워드를 입력해주세요.."
+              required
+            />
+            <button
+              type="submit"
+              class="text-white absolute end-2.5 bottom-2.5 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-blue-800"
+            >
+              검색
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <div id="map">
+      <iframe
+        width="80%"
+        height="800px"
+        style="border: 0"
+        loading="lazy"
+        allowfullscreen
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyB485glkWscMK87ttOneua2p2EmhouJPQ8
+    &q=Space+Needle,Seattle+WA"
+      >
+      </iframe>
+    </div>
+    <input
+      id="pac-input"
+      type="text"
+      style="visibility: hidden"
+      placeholder="Enter a location"
+    />
+
+    <script>
+      // 로그인 상태를 확인하는 함수
+      async function isLoggedIn() {
+        try {
+          const response = await fetch("/api/userinfo", {
+            method: "GET",
+            credentials: "include",
+          });
+          if (response.ok) {
+            const data = await response.json();
+            return data.isLoggedIn; // 서버에서 로그인 상태를 반환한다고 가정
+          } else {
+            return false;
+          }
+        } catch (error) {
+          console.error("Error fetching login status:", error);
+          return false;
+        }
+      }
+
+      // 로그인된 유저의 정보를 가져오는 함수
+      async function getUserInfo() {
+        try {
+          const response = await fetch("/api/userinfo", {
+            method: "GET",
+            credentials: "include",
+          });
+          if (response.ok) {
+            const data = await response.json();
+            return data.user; // 서버에서 유저 정보를 반환한다고 가정
+          } else {
+            return null;
+          }
+        } catch (error) {
+          console.error("Error fetching user info:", error);
+          return null;
+        }
+      }
+
+      // 네비게이션 바의 로그인 정보 업데이트
+      document.addEventListener("DOMContentLoaded", async function () {
+        const loginInfoElement = document.getElementById("login-info");
+
+        if (await isLoggedIn()) {
+          const userInfo = await getUserInfo();
+          if (userInfo) {
+            loginInfoElement.innerHTML = `
+              <div
+                class="relative w-10 h-10 overflow-hidden bg-gray-600 rounded-full"
+              >
+                <svg
+                  class="absolute w-12 h-12 text-gray-400 -left-1"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </div>
+              <span class="text-white">${userInfo.id}</span>
+            `;
+          }
+        } else {
+          loginInfoElement.innerHTML = `
+            <a
+              href="/accounts/login/"
+              class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-800 px-4 py-2 rounded-lg"
+            >
+              로그인
+            </a>
+          `;
+        }
+      });
+    </script>
+  </body>
 </html>

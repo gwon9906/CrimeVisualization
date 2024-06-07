@@ -16,7 +16,7 @@ class CrimeDataSystem:
             location=location,
             frequency=frequency
         )
-`
+
 def search_crime_data_view(request): # 검색 뷰
     if request.method == 'POST':    # POST 요청이 들어왔을 때
         region = request.POST.get('region') # region을 POST로 받아옴
@@ -31,5 +31,5 @@ def add_crime_data_view(request):
         location = request.POST.get('location')
         frequency = request.POST.get('frequency')
         CrimeDataSystem.add_crime_data(crime_type, date, location, frequency)
-        return render(request, 'crimes/add_success.html.html')
+        return render(request, 'crimes/add_success.html')
     return render(request, 'crimes/add_crime_data.html')

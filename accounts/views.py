@@ -5,6 +5,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.urls import reverse_lazy
 from .forms import SignUpForm
+from django.contrib.auth import views as auth_views
+from .forms import CustomAuthenticationForm
 
 
 def signup(request):
@@ -24,9 +26,8 @@ def signup(request):
     return render(request, 'accounts/signup.html', {'form': form})
 
 
-class CustomLoginView(LoginView):
+class LoginView(auth_views.LoginView):
+    form_class = CustomAuthenticationForm
     template_name = 'accounts/login.html'
-    redirect_authenticated_user = True
 
-    def get_success_url(self):
-        return reverse_lazy('home')
+
