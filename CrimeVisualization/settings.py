@@ -87,6 +87,7 @@ DATABASES = {
         'PASSWORD': 'lhg243601',  # RDS 인스턴스의 마스터 사용자 암호
         'HOST': 'crime.cfrxs59tjqaj.ap-northeast-2.rds.amazonaws.com',  # RDS 인스턴스의 엔드포인트 (예: mydbinstance.xyz123abc.us-west-2.rds.amazonaws.com)
         'PORT': '3306',  # MariaDB의 기본 포트 번호
+        'ENGINE': 'django.db.backends.dummy',
     }
 }
 
