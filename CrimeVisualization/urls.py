@@ -10,4 +10,5 @@ urlpatterns = [
     path('crimes/', include('crimes.urls')),
     path('crime_map/', include('crime_map.urls')),
     path('', search_crime_data_view, name='home'),  # 홈 화면을 검색 뷰로 설정
+    path('crime_map/', include('crime_map.urls')),
 ]
