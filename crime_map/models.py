@@ -1,11 +1,14 @@
 from django.db import models
 
-# Create your models here.
 class CrimeData(models.Model):
+    station = models.CharField(max_length=100)
     crime_type = models.CharField(max_length=100)
-    date = models.DateField()
-    location = models.CharField(max_length=255)
-    frequency = models.IntegerField()
+    year = models.IntegerField()
+    murder = models.IntegerField(default=0)
+    robbery = models.IntegerField(default=0)
+    sexual_crime = models.IntegerField(default=0)
+    theft = models.IntegerField(default=0)
+    violence = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.crime_type} at {self.location} on {self.date}"
+        return f"{self.station} - {self.crime_type} - {self.year}"
