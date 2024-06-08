@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from crime_map.models import CrimeData  # crime_map의 모델을 가져옴
+from crimes.models import CrimeData  # crimes의 모델을 가져옴
+from django.http import JsonResponse
 
 class CrimeDataSystem:
     @staticmethod
@@ -15,12 +16,13 @@ class CrimeDataSystem:
             count=count,
         )
 
-def search_crime_data_view(request):  # 검색 뷰
-    if request.method == 'POST':  # POST 요청이 들어왔을 때
-        region = request.POST.get('region')  # region을 POST로 받아옴
-        crime_data = CrimeDataSystem.search_crime_data(region)  # CrimeDataSystem의 search_crime_data 메서드를 호출
-        return render(request, 'crimes/search_results.html', {'crime_data': crime_data})  # 검색 결과를 search_results.html에 전달
-    return render(request, 'crimes/search.html')  # GET 요청이 들어왔을 때는 search.html을 렌더링
+def search_crime_data_view(request):
+    if request.method == 'POST':
+        region = request.POST.get('region')
+        crime_data = CrimeDataSystem.search_crime_data(region)
+        crime_data_json = list(crime_data.values())  # JSON 형태로 변환
+        return render(request, 'crimes/search_results.html', {'crime_data': crime_data_json, 'region': region})
+    return render(request, 'crimes/search.html')
 
 def add_crime_data_view(request):
     if request.method == 'POST':
@@ -31,3 +33,8 @@ def add_crime_data_view(request):
         CrimeDataSystem.add_crime_data(station, crime_type, year, count)
         return render(request, 'crimes/add_success.html')
     return render(request, 'crimes/add_crime_data.html')
+
+def get_crime_data_by_year(request, region, year):
+    crime_data = CrimeData.objects.filter(station__icontains=region, year=year)
+    crime_data_json = list(crime_data.values())  # JSON 형태로 변환
+    return JsonResponse(crime_data_json, safe=False)
