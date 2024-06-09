@@ -5,7 +5,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 
-
 class SignUpForm(UserCreationForm):
     name = forms.CharField(max_length=30, required=True, help_text='이름을 입력하세요.')
 
@@ -13,8 +12,12 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('username', 'name', 'password1', 'password2')
 
-from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+    def save(self, commit=True):
+        user = super(SignUpForm, self).save(commit=False)
+        user.first_name = self.cleaned_data['name']
+        if commit:
+            user.save()
+        return user
 
 class CustomAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):

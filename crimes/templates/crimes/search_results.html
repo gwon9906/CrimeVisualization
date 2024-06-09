@@ -1,168 +1,132 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="shortcut icon"
-      type="image/x-icon"
-      href="https://www.police.go.kr/favicon.ico"
-    />
+    <link rel="shortcut icon" type="image/x-icon" href="https://www.police.go.kr/favicon.ico" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>부산 치안 지킴이</title>
-  </head>
-
-  <body class="bg-gray-900">
+</head>
+<body class="bg-gray-900">
     <nav class="bg-gray-900 border-b-4 border-indigo-500">
-      <div
-        class="flex flex-wrap items-center justify-between max-w-screen-xl p-4 mx-auto"
-      >
-        <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
-          <img
-            src="https://wikiwandv2-19431.kxcdn.com/_next/image?url=https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Korean_National_Police_Agency_Emblem.svg/langko-640px-Korean_National_Police_Agency_Emblem.svg.png&w=640&q=50"
-            class="h-8"
-            alt="police_png"
-          />
-          <span
-            class="self-center text-2xl font-semibold text-white whitespace-nowrap"
-            >부산 치안 지킴이</span
-          >
-        </a>
-
-        <div class="hidden w-full md:block md:w-auto" id="navbar-default">
-          <ul
-            class="flex flex-col p-4 mt-4 font-medium bg-gray-900 border border-gray-700 rounded-lg md:p-0 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0"
-          >
-            <li class="mt-2">
-              <a
-                href="/"
-                class="block px-3 py-2 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0"
-                aria-current="page"
-                >메인</a
-              >
-            </li>
-            <li class="mt-2">
-              <a
-                href="/crime_map"
-                class="block px-3 py-2 text-white rounded md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 hover:text-white"
-                >마커</a
-              >
-            </li>
-            <li class="mt-2">
-              <a
-                href="/board"
-                class="block px-3 py-2 text-white rounded md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 hover:text-white"
-                >게시판</a
-              >
-            </li>
-            <li class="mt-2">
-              <a
-                href="#"
-                class="block px-3 py-2 text-white rounded md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 hover:text-white"
-                >대시보드</a
-              >
-            </li>
-            <li class="flex items-center space-x-4 mt-2" id="login-info">
-              <!-- 로그인 상태에 따라 내용이 변경될 부분 -->
-            </li>
-          </ul>
+        <div class="flex flex-wrap items-center justify-between max-w-screen-xl p-4 mx-auto">
+            <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <img src="https://wikiwandv2-19431.kxcdn.com/_next/image?url=https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Korean_National_Police_Agency_Emblem.svg/langko-640px-Korean_National_Police_Agency_Emblem.svg.png&w=640&q=50" class="h-8" alt="police_png" />
+                <span class="self-center text-2xl font-semibold text-white whitespace-nowrap">부산 치안 지킴이</span>
+            </a>
+            <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+                <ul class="flex flex-col p-4 mt-4 font-medium bg-gray-900 border border-gray-700 rounded-lg md:p-0 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
+                    <li class="mt-2">
+                        <a href="/" class="block px-3 py-2 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0" aria-current="page">메인</a>
+                    </li>
+                    <li class="mt-2">
+                        <a href="/crime_map" class="block px-3 py-2 text-white rounded md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 hover:text-white">마커</a>
+                    </li>
+                    <li class="mt-2">
+                        <a href="/board" class="block px-3 py-2 text-white rounded md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 hover:text-white">게시판</a>
+                    </li>
+                    <li class="mt-2">
+                        <a href="#" class="block px-3 py-2 text-white rounded md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 hover:text-white">대시보드</a>
+                    </li>
+                    <li class="flex items-center space-x-4 mt-2" id="login-info"></li>
+                </ul>
+            </div>
         </div>
-      </div>
     </nav>
 
     <section>
-      <div
-        class="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-16 lg:px-12"
-      >
-        <h1
-          class="mb-8 text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-5xl"
-        >
-          시각화 된 범죄 데이터 및 정보를 제공
-        </h1>
-
-        <form class="max-w-md mx-auto" method="post">
-          {% csrf_token %}
-          <div class="relative">
-            <div
-              class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3"
-            ></div>
-            <input
-              type="text"
-              name="region"
-              id="region"
-              class="block w-full p-4 text-sm placeholder-gray-400 bg-gray-700 border border-gray-600 rounded-lg ps-10 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="지역, 키워드를 입력해주세요.."
-              required
-            />
-            <button
-              type="submit"
-              class="text-white absolute end-2.5 bottom-2.5 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-blue-800"
-            >
-              검색
-            </button>
-          </div>
-        </form>
-      </div>
+        <div class="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-16 lg:px-12">
+            <h1 class="mb-8 text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-5xl">시각화 된 범죄 데이터 및 정보를 제공</h1>
+        </div>
     </section>
 
     <div class="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-16 lg:px-12">
-      <canvas id="crimeChart"></canvas>
+        {% if message %}
+            <div class="text-white">
+                {{ message }}
+            </div>
+        {% else %}
+            <canvas id="crimeChart"></canvas>
+            <div class="mt-4">
+                <select id="yearSelect" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">
+                    {% for year in years %}
+                        <option value="{{ year }}">{{ year }}</option>
+                    {% endfor %}
+                </select>
+                <button id="loadMore" class="ml-2 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">더 보기</button>
+            </div>
+        {% endif %}
     </div>
 
     <script>
-      document.addEventListener('DOMContentLoaded', (event) => {
-        const crimeData = {{ crime_data|safe }};
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const crimeData = {{ crime_data|safe }};
+            const region = "{{ region }}";
+            const chartData = processData(crimeData);
+            let crimeChart;
 
-        // 데이터를 처리하여 범죄 유형별 합계를 구합니다.
-        const labels = ['살인', '강도', '성범죄', '절도', '폭력'];
-        const data = {
-          labels: labels,
-          datasets: [{
-            label: '범죄 수',
-            data: [
-              crimeData.reduce((acc, crime) => acc + crime.murder, 0),
-              crimeData.reduce((acc, crime) => acc + crime.robbery, 0),
-              crimeData.reduce((acc, crime) => acc + crime.sexual_crime, 0),
-              crimeData.reduce((acc, crime) => acc + crime.theft, 0),
-              crimeData.reduce((acc, crime) => acc + crime.violence, 0)
-            ],
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)'
-            ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)'
-            ],
-            borderWidth: 1
-          }]
-        };
-
-        // Chart.js를 사용하여 그래프를 생성합니다.
-        const config = {
-          type: 'bar',
-          data: data,
-          options: {
-            scales: {
-              y: {
-                beginAtZero: true
-              }
+            function processData(data) {
+                return {
+                    labels: ['살인', '강도', '성범죄', '절도', '폭력'],
+                    datasets: [{
+                        label: '범죄 수',
+                        data: [
+                            data.reduce((acc, crime) => acc + crime.murder, 0),
+                            data.reduce((acc, crime) => acc + crime.robbery, 0),
+                            data.reduce((acc, crime) => acc + crime.sexual_crime, 0),
+                            data.reduce((acc, crime) => acc + crime.theft, 0),
+                            data.reduce((acc, crime) => acc + crime.violence, 0)
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                };
             }
-          },
-        };
 
-        const crimeChart = new Chart(
-          document.getElementById('crimeChart'),
-          config
-        );
-      });
+            function createChart(data) {
+                const ctx = document.getElementById('crimeChart').getContext('2d');
+                if (crimeChart) {
+                    crimeChart.destroy();
+                }
+                crimeChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: data,
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            createChart(chartData);
+
+            document.getElementById('loadMore').addEventListener('click', () => {
+                const selectedYear = document.getElementById('yearSelect').value;
+                fetch(`/crimes/search/${region}/${selectedYear}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const newData = processData(data);
+                        createChart(newData);
+                    });
+            });
+        });
     </script>
-  </body>
+</body>
 </html>

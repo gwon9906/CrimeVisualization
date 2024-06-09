@@ -1,22 +1,16 @@
 # accounts/views.py
 
-from django.contrib.auth.views import LoginView
-from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from django.urls import reverse_lazy
+from django.shortcuts import render, redirect
 from .forms import SignUpForm
 from django.contrib.auth import views as auth_views
 from .forms import CustomAuthenticationForm
-
 
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            user.refresh_from_db()
-            user.email = form.cleaned_data.get('email')
-            user.save()
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
             login(request, user)
@@ -25,9 +19,6 @@ def signup(request):
         form = SignUpForm()
     return render(request, 'accounts/signup.html', {'form': form})
 
-
 class LoginView(auth_views.LoginView):
     form_class = CustomAuthenticationForm
     template_name = 'accounts/login.html'
-
-
