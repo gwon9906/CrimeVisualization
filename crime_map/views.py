@@ -27,14 +27,24 @@ police_station_locations = {
 }
 
 def get_crime_data(crime_type):
-    filtered_data = df[df['crime_type'] == crime_type]
-    crime_dict = filtered_data.to_dict(orient='records')
+    crime_type = crime_type.strip()
+    filtered_data = df[['경찰서', crime_type, '년도']]
+    crime_dict = []
+    for index, row in filtered_data.iterrows():
+        if row['경찰서'] in police_station_locations:
+            crime_dict.append({
+                'station': row['경찰서'],
+                'count': row[crime_type],
+                'year': row['년도'],
+                'lat': police_station_locations[row['경찰서']]['lat'],
+                'lng': police_station_locations[row['경찰서']]['lng']
+            })
     return crime_dict
 
 def get_crime_details(crime_type, year, station):
-    filtered_data = df[(df['year'] == int(year)) & (df['district'] == station) & (df['crime_type'] == crime_type)]
+    filtered_data = df[(df['년도'] == int(year)) & (df['경찰서'] == station)]
     if not filtered_data.empty:
-        crime_count = filtered_data.iloc[0]['count']
+        crime_count = filtered_data.iloc[0][crime_type]
         position = police_station_locations.get(station, {'lat': 0, 'lng': 0})
         return {'count': crime_count, 'position': position}
     else:
