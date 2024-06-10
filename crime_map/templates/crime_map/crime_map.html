@@ -325,6 +325,9 @@
             this.highlightRegion(this.selectedCrimeType, year, station); // 메소드 이름: highlightRegion
           }
         }
+        setSelectedCrimeType(crimeType) {
+      this.selectedCrimeType = crimeType;
+  }
 
         highlightRegion(crimeType, year, station) {
           // 메소드 이름: highlightRegion
@@ -492,6 +495,13 @@
           );
         }
       }
+      /*displayCrimeDetail(crimeId) {
+    $.getJSON(`/crime_map/crime_detail/${crimeId}`, (data) => {
+      const content = `<b>범죄 ID:</b> ${crimeId}<br><b>발생 횟수:</b> ${data.count}<br><b>위치:</b> (${data.position.lat}, ${data.position.lng})`;
+      const infowindow = new google.maps.InfoWindow({
+        content: content,
+      });*/
+    
 
       const crimeMapUI = new CrimeMapUI();
 
