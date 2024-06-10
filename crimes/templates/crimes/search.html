@@ -41,7 +41,7 @@
           >
             <li class="mt-2">
               <a
-                href="#"
+                href="/"
                 class="block px-3 py-2 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0"
                 aria-current="page"
                 >메인</a
@@ -49,14 +49,14 @@
             </li>
             <li class="mt-2">
               <a
-                href="#"
+                href="/crime_map"
                 class="block px-3 py-2 text-white rounded md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 hover:text-white"
                 >마커</a
               >
             </li>
             <li class="mt-2">
               <a
-                href="#"
+                href="/board"
                 class="block px-3 py-2 text-white rounded md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 hover:text-white"
                 >게시판</a
               >
@@ -86,14 +86,15 @@
           시각화 된 범죄 데이터 및 정보를 제공
         </h1>
 
-        <form class="max-w-md mx-auto">
+        <form class="max-w-md mx-auto" method="post" action="{% url 'search_crime_data' %}">
           {% csrf_token %}
-          <div class="relative" method="post">
+          <div class="relative">
             <div
               class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3"
             ></div>
             <input
               type="text"
+              name="region"
               id="region"
               class="block w-full p-4 text-sm placeholder-gray-400 bg-gray-700 border border-gray-600 rounded-lg ps-10 focus:ring-blue-500 focus:border-blue-500"
               placeholder="지역, 키워드를 입력해주세요.."
@@ -111,101 +112,62 @@
     </section>
 
     <div id="map">
-      <iframe
-        width="80%"
-        height="800px"
-        style="border: 0"
-        loading="lazy"
-        allowfullscreen
-        referrerpolicy="no-referrer-when-downgrade"
-        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyB485glkWscMK87ttOneua2p2EmhouJPQ8
-    &q=Space+Needle,Seattle+WA"
-      >
-      </iframe>
+      <canvas id="crimeChart"></canvas>
     </div>
-    <input
-      id="pac-input"
-      type="text"
-      style="visibility: hidden"
-      placeholder="Enter a location"
-    />
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-      // 로그인 상태를 확인하는 함수
-      async function isLoggedIn() {
-        try {
-          const response = await fetch("/api/userinfo", {
-            method: "GET",
-            credentials: "include",
-          });
-          if (response.ok) {
-            const data = await response.json();
-            return data.isLoggedIn; // 서버에서 로그인 상태를 반환한다고 가정
-          } else {
-            return false;
-          }
-        } catch (error) {
-          console.error("Error fetching login status:", error);
-          return false;
-        }
-      }
+      document.addEventListener('DOMContentLoaded', (event) => {
+        const crimeData = {{ crime_data|safe }};
 
-      // 로그인된 유저의 정보를 가져오는 함수
-      async function getUserInfo() {
-        try {
-          const response = await fetch("/api/userinfo", {
-            method: "GET",
-            credentials: "include",
-          });
-          if (response.ok) {
-            const data = await response.json();
-            return data.user; // 서버에서 유저 정보를 반환한다고 가정
-          } else {
-            return null;
-          }
-        } catch (error) {
-          console.error("Error fetching user info:", error);
-          return null;
-        }
-      }
+        // 데이터를 처리하여 범죄 유형별 합계를 구합니다.
+        const labels = ['살인', '강도', '성범죄', '절도', '폭력'];
+        const data = {
+          labels: labels,
+          datasets: [{
+            label: '범죄 수',
+            data: [
+              crimeData.reduce((acc, crime) => acc + crime.murder, 0),
+              crimeData.reduce((acc, crime) => acc + crime.robbery, 0),
+              crimeData.reduce((acc, crime) => acc + crime.sexual_crime, 0),
+              crimeData.reduce((acc, crime) => acc + crime.theft, 0),
+              crimeData.reduce((acc, crime) => acc + crime.violence, 0)
+            ],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)'
+            ],
+            borderWidth: 1
+          }]
+        };
 
-      // 네비게이션 바의 로그인 정보 업데이트
-      document.addEventListener("DOMContentLoaded", async function () {
-        const loginInfoElement = document.getElementById("login-info");
+        // Chart.js를 사용하여 그래프를 생성합니다.
+        const config = {
+          type: 'bar',
+          data: data,
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          },
+        };
 
-        if (await isLoggedIn()) {
-          const userInfo = await getUserInfo();
-          if (userInfo) {
-            loginInfoElement.innerHTML = `
-              <div
-                class="relative w-10 h-10 overflow-hidden bg-gray-600 rounded-full"
-              >
-                <svg
-                  class="absolute w-12 h-12 text-gray-400 -left-1"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
-              </div>
-              <span class="text-white">${userInfo.id}</span>
-            `;
-          }
-        } else {
-          loginInfoElement.innerHTML = `
-            <a
-              href="/accounts/login/"
-              class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-800 px-4 py-2 rounded-lg"
-            >
-              로그인
-            </a>
-          `;
-        }
+        const crimeChart = new Chart(
+          document.getElementById('crimeChart'),
+          config
+        );
       });
     </script>
   </body>

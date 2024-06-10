@@ -1,0 +1,912 @@
+[
+    {
+        "station": "중부",
+        "crime_type": "경찰서",
+        "murder": "1",
+        "robbery": "2",
+        "sexual_crime": "47",
+        "theft": "954",
+        "violence": "784",
+        "year": "2018"
+    },
+    {
+        "station": "동래",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "6",
+        "sexual_crime": "89",
+        "theft": "1078",
+        "violence": "1375",
+        "year": "2018"
+    },
+    {
+        "station": "영도",
+        "crime_type": "경찰서",
+        "murder": "4",
+        "robbery": "2",
+        "sexual_crime": "43",
+        "theft": "329",
+        "violence": "666",
+        "year": "2018"
+    },
+    {
+        "station": "동부",
+        "crime_type": "경찰서",
+        "murder": "0",
+        "robbery": "5",
+        "sexual_crime": "63",
+        "theft": "576",
+        "violence": "823",
+        "year": "2018"
+    },
+    {
+        "station": "부산진",
+        "crime_type": "경찰서",
+        "murder": "1",
+        "robbery": "17",
+        "sexual_crime": "321",
+        "theft": "2376",
+        "violence": "3253",
+        "year": "2018"
+    },
+    {
+        "station": "서부",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "8",
+        "sexual_crime": "32",
+        "theft": "730",
+        "violence": "282",
+        "year": "2018"
+    },
+    {
+        "station": "남부",
+        "crime_type": "경찰서",
+        "murder": "8",
+        "robbery": "10",
+        "sexual_crime": "185",
+        "theft": "1458",
+        "violence": "2091",
+        "year": "2018"
+    },
+    {
+        "station": "해운대",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "3",
+        "sexual_crime": "185",
+        "theft": "1376",
+        "violence": "1986",
+        "year": "2018"
+    },
+    {
+        "station": "사상",
+        "crime_type": "경찰서",
+        "murder": "5",
+        "robbery": "9",
+        "sexual_crime": "116",
+        "theft": "1018",
+        "violence": "1312",
+        "year": "2018"
+    },
+    {
+        "station": "금정",
+        "crime_type": "경찰서",
+        "murder": "4",
+        "robbery": "7",
+        "sexual_crime": "87",
+        "theft": "595",
+        "violence": "936",
+        "year": "2018"
+    },
+    {
+        "station": "사하",
+        "crime_type": "경찰서",
+        "murder": "4",
+        "robbery": "8",
+        "sexual_crime": "119",
+        "theft": "1062",
+        "violence": "1705",
+        "year": "2018"
+    },
+    {
+        "station": "연제",
+        "crime_type": "경찰서",
+        "murder": "5",
+        "robbery": "8",
+        "sexual_crime": "90",
+        "theft": "988",
+        "violence": "1578",
+        "year": "2018"
+    },
+    {
+        "station": "강서",
+        "crime_type": "경찰서",
+        "murder": "2",
+        "robbery": "1",
+        "sexual_crime": "46",
+        "theft": "501",
+        "violence": "499",
+        "year": "2018"
+    },
+    {
+        "station": "북부",
+        "crime_type": "경찰서",
+        "murder": "7",
+        "robbery": "3",
+        "sexual_crime": "72",
+        "theft": "805",
+        "violence": "1441",
+        "year": "2018"
+    },
+    {
+        "station": "기장",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "2",
+        "sexual_crime": "38",
+        "theft": "415",
+        "violence": "772",
+        "year": "2018"
+    },
+    {
+        "station": "",
+        "crime_type": "",
+        "murder": "",
+        "robbery": "",
+        "sexual_crime": "",
+        "theft": "",
+        "violence": "",
+        "year": ""
+    },
+    {
+        "station": "중부",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "4",
+        "sexual_crime": "64",
+        "theft": "700",
+        "violence": "822",
+        "year": "2019"
+    },
+    {
+        "station": "동래",
+        "crime_type": "경찰서",
+        "murder": "4",
+        "robbery": "6",
+        "sexual_crime": "91",
+        "theft": "938",
+        "violence": "1468",
+        "year": "2019"
+    },
+    {
+        "station": "영도",
+        "crime_type": "경찰서",
+        "murder": "4",
+        "robbery": "5",
+        "sexual_crime": "32",
+        "theft": "350",
+        "violence": "662",
+        "year": "2019"
+    },
+    {
+        "station": "동부",
+        "crime_type": "경찰서",
+        "murder": "0",
+        "robbery": "10",
+        "sexual_crime": "52",
+        "theft": "696",
+        "violence": "934",
+        "year": "2019"
+    },
+    {
+        "station": "부산진",
+        "crime_type": "경찰서",
+        "murder": "7",
+        "robbery": "16",
+        "sexual_crime": "306",
+        "theft": "2424",
+        "violence": "3304",
+        "year": "2019"
+    },
+    {
+        "station": "서부",
+        "crime_type": "경찰서",
+        "murder": "1",
+        "robbery": "4",
+        "sexual_crime": "43",
+        "theft": "606",
+        "violence": "596",
+        "year": "2019"
+    },
+    {
+        "station": "남부",
+        "crime_type": "경찰서",
+        "murder": "8",
+        "robbery": "5",
+        "sexual_crime": "148",
+        "theft": "1541",
+        "violence": "2238",
+        "year": "2019"
+    },
+    {
+        "station": "해운대",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "5",
+        "sexual_crime": "172",
+        "theft": "1305",
+        "violence": "2014",
+        "year": "2019"
+    },
+    {
+        "station": "사상",
+        "crime_type": "경찰서",
+        "murder": "8",
+        "robbery": "3",
+        "sexual_crime": "91",
+        "theft": "1024",
+        "violence": "1446",
+        "year": "2019"
+    },
+    {
+        "station": "금정",
+        "crime_type": "경찰서",
+        "murder": "10",
+        "robbery": "11",
+        "sexual_crime": "83",
+        "theft": "1036",
+        "violence": "1188",
+        "year": "2019"
+    },
+    {
+        "station": "사하",
+        "crime_type": "경찰서",
+        "murder": "10",
+        "robbery": "4",
+        "sexual_crime": "103",
+        "theft": "1025",
+        "violence": "1535",
+        "year": "2019"
+    },
+    {
+        "station": "연제",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "5",
+        "sexual_crime": "124",
+        "theft": "1068",
+        "violence": "1646",
+        "year": "2019"
+    },
+    {
+        "station": "강서",
+        "crime_type": "경찰서",
+        "murder": "1",
+        "robbery": "0",
+        "sexual_crime": "35",
+        "theft": "474",
+        "violence": "526",
+        "year": "2019"
+    },
+    {
+        "station": "북부",
+        "crime_type": "경찰서",
+        "murder": "1",
+        "robbery": "3",
+        "sexual_crime": "86",
+        "theft": "807",
+        "violence": "1614",
+        "year": "2019"
+    },
+    {
+        "station": "기장",
+        "crime_type": "경찰서",
+        "murder": "0",
+        "robbery": "1",
+        "sexual_crime": "40",
+        "theft": "497",
+        "violence": "656",
+        "year": "2019"
+    },
+    {
+        "station": "중부",
+        "crime_type": "경찰서",
+        "murder": "1",
+        "robbery": "0",
+        "sexual_crime": "42",
+        "theft": "686",
+        "violence": "644",
+        "year": "2020"
+    },
+    {
+        "station": "동래",
+        "crime_type": "경찰서",
+        "murder": "5",
+        "robbery": "2",
+        "sexual_crime": "101",
+        "theft": "1018",
+        "violence": "1325",
+        "year": "2020"
+    },
+    {
+        "station": "영도",
+        "crime_type": "경찰서",
+        "murder": "0",
+        "robbery": "0",
+        "sexual_crime": "25",
+        "theft": "366",
+        "violence": "615",
+        "year": "2020"
+    },
+    {
+        "station": "동부",
+        "crime_type": "경찰서",
+        "murder": "2",
+        "robbery": "0",
+        "sexual_crime": "43",
+        "theft": "571",
+        "violence": "809",
+        "year": "2020"
+    },
+    {
+        "station": "부산진",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "9",
+        "sexual_crime": "295",
+        "theft": "2317",
+        "violence": "3166",
+        "year": "2020"
+    },
+    {
+        "station": "서부",
+        "crime_type": "경찰서",
+        "murder": "1",
+        "robbery": "1",
+        "sexual_crime": "22",
+        "theft": "458",
+        "violence": "581",
+        "year": "2020"
+    },
+    {
+        "station": "남부",
+        "crime_type": "경찰서",
+        "murder": "7",
+        "robbery": "4",
+        "sexual_crime": "152",
+        "theft": "1345",
+        "violence": "1952",
+        "year": "2020"
+    },
+    {
+        "station": "해운대",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "0",
+        "sexual_crime": "174",
+        "theft": "1336",
+        "violence": "1722",
+        "year": "2020"
+    },
+    {
+        "station": "사상",
+        "crime_type": "경찰서",
+        "murder": "7",
+        "robbery": "6",
+        "sexual_crime": "109",
+        "theft": "969",
+        "violence": "1420",
+        "year": "2020"
+    },
+    {
+        "station": "금정",
+        "crime_type": "경찰서",
+        "murder": "2",
+        "robbery": "2",
+        "sexual_crime": "81",
+        "theft": "943",
+        "violence": "979",
+        "year": "2020"
+    },
+    {
+        "station": "사하",
+        "crime_type": "경찰서",
+        "murder": "6",
+        "robbery": "0",
+        "sexual_crime": "98",
+        "theft": "1034",
+        "violence": "1447",
+        "year": "2020"
+    },
+    {
+        "station": "연제",
+        "crime_type": "경찰서",
+        "murder": "5",
+        "robbery": "7",
+        "sexual_crime": "110",
+        "theft": "1136",
+        "violence": "1635",
+        "year": "2020"
+    },
+    {
+        "station": "강서",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "3",
+        "sexual_crime": "35",
+        "theft": "443",
+        "violence": "516",
+        "year": "2020"
+    },
+    {
+        "station": "북부",
+        "crime_type": "경찰서",
+        "murder": "5",
+        "robbery": "4",
+        "sexual_crime": "80",
+        "theft": "1030",
+        "violence": "1435",
+        "year": "2020"
+    },
+    {
+        "station": "기장",
+        "crime_type": "경찰서",
+        "murder": "1",
+        "robbery": "1",
+        "sexual_crime": "49",
+        "theft": "517",
+        "violence": "810",
+        "year": "2020"
+    },
+    {
+        "station": "중부",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "2",
+        "sexual_crime": "30",
+        "theft": "583",
+        "violence": "565",
+        "year": "2021"
+    },
+    {
+        "station": "동래",
+        "crime_type": "경찰서",
+        "murder": "2",
+        "robbery": "1",
+        "sexual_crime": "99",
+        "theft": "922",
+        "violence": "1124",
+        "year": "2021"
+    },
+    {
+        "station": "영도",
+        "crime_type": "경찰서",
+        "murder": "4",
+        "robbery": "1",
+        "sexual_crime": "51",
+        "theft": "299",
+        "violence": "512",
+        "year": "2021"
+    },
+    {
+        "station": "동부",
+        "crime_type": "경찰서",
+        "murder": "2",
+        "robbery": "0",
+        "sexual_crime": "36",
+        "theft": "478",
+        "violence": "656",
+        "year": "2021"
+    },
+    {
+        "station": "부산진",
+        "crime_type": "경찰서",
+        "murder": "2",
+        "robbery": "5",
+        "sexual_crime": "256",
+        "theft": "2177",
+        "violence": "2614",
+        "year": "2021"
+    },
+    {
+        "station": "서부",
+        "crime_type": "경찰서",
+        "murder": "1",
+        "robbery": "2",
+        "sexual_crime": "30",
+        "theft": "414",
+        "violence": "625",
+        "year": "2021"
+    },
+    {
+        "station": "남부",
+        "crime_type": "경찰서",
+        "murder": "4",
+        "robbery": "6",
+        "sexual_crime": "161",
+        "theft": "1194",
+        "violence": "1638",
+        "year": "2021"
+    },
+    {
+        "station": "해운대",
+        "crime_type": "경찰서",
+        "murder": "4",
+        "robbery": "10",
+        "sexual_crime": "162",
+        "theft": "1238",
+        "violence": "1585",
+        "year": "2021"
+    },
+    {
+        "station": "사상",
+        "crime_type": "경찰서",
+        "murder": "4",
+        "robbery": "7",
+        "sexual_crime": "88",
+        "theft": "948",
+        "violence": "1070",
+        "year": "2021"
+    },
+    {
+        "station": "금정",
+        "crime_type": "경찰서",
+        "murder": "5",
+        "robbery": "2",
+        "sexual_crime": "69",
+        "theft": "778",
+        "violence": "793",
+        "year": "2021"
+    },
+    {
+        "station": "사하",
+        "crime_type": "경찰서",
+        "murder": "4",
+        "robbery": "2",
+        "sexual_crime": "80",
+        "theft": "907",
+        "violence": "1249",
+        "year": "2021"
+    },
+    {
+        "station": "연제",
+        "crime_type": "경찰서",
+        "murder": "5",
+        "robbery": "3",
+        "sexual_crime": "106",
+        "theft": "886",
+        "violence": "1382",
+        "year": "2021"
+    },
+    {
+        "station": "강서",
+        "crime_type": "경찰서",
+        "murder": "0",
+        "robbery": "3",
+        "sexual_crime": "40",
+        "theft": "356",
+        "violence": "537",
+        "year": "2021"
+    },
+    {
+        "station": "북부",
+        "crime_type": "경찰서",
+        "murder": "5",
+        "robbery": "7",
+        "sexual_crime": "79",
+        "theft": "926",
+        "violence": "1056",
+        "year": "2021"
+    },
+    {
+        "station": "기장",
+        "crime_type": "경찰서",
+        "murder": "1",
+        "robbery": "0",
+        "sexual_crime": "51",
+        "theft": "564",
+        "violence": "688",
+        "year": "2021"
+    },
+    {
+        "station": "중부",
+        "crime_type": "경찰서",
+        "murder": "0",
+        "robbery": "4",
+        "sexual_crime": "38",
+        "theft": "540",
+        "violence": "578",
+        "year": "2022"
+    },
+    {
+        "station": "동래",
+        "crime_type": "경찰서",
+        "murder": "1",
+        "robbery": "1",
+        "sexual_crime": "99",
+        "theft": "725",
+        "violence": "964",
+        "year": "2022"
+    },
+    {
+        "station": "영도",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "1",
+        "sexual_crime": "19",
+        "theft": "295",
+        "violence": "510",
+        "year": "2022"
+    },
+    {
+        "station": "동부",
+        "crime_type": "경찰서",
+        "murder": "1",
+        "robbery": "3",
+        "sexual_crime": "41",
+        "theft": "469",
+        "violence": "595",
+        "year": "2022"
+    },
+    {
+        "station": "부산진",
+        "crime_type": "경찰서",
+        "murder": "6",
+        "robbery": "3",
+        "sexual_crime": "222",
+        "theft": "1989",
+        "violence": "2318",
+        "year": "2022"
+    },
+    {
+        "station": "서부",
+        "crime_type": "경찰서",
+        "murder": "2",
+        "robbery": "1",
+        "sexual_crime": "25",
+        "theft": "454",
+        "violence": "440",
+        "year": "2022"
+    },
+    {
+        "station": "남부",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "3",
+        "sexual_crime": "105",
+        "theft": "887",
+        "violence": "1405",
+        "year": "2022"
+    },
+    {
+        "station": "해운대",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "6",
+        "sexual_crime": "153",
+        "theft": "1333",
+        "violence": "1531",
+        "year": "2022"
+    },
+    {
+        "station": "사상",
+        "crime_type": "경찰서",
+        "murder": "6",
+        "robbery": "1",
+        "sexual_crime": "81",
+        "theft": "841",
+        "violence": "1003",
+        "year": "2022"
+    },
+    {
+        "station": "금정",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "5",
+        "sexual_crime": "76",
+        "theft": "675",
+        "violence": "707",
+        "year": "2022"
+    },
+    {
+        "station": "사하",
+        "crime_type": "경찰서",
+        "murder": "6",
+        "robbery": "3",
+        "sexual_crime": "65",
+        "theft": "628",
+        "violence": "1073",
+        "year": "2022"
+    },
+    {
+        "station": "연제",
+        "crime_type": "경찰서",
+        "murder": "2",
+        "robbery": "2",
+        "sexual_crime": "92",
+        "theft": "822",
+        "violence": "1337",
+        "year": "2022"
+    },
+    {
+        "station": "강서",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "1",
+        "sexual_crime": "32",
+        "theft": "318",
+        "violence": "442",
+        "year": "2022"
+    },
+    {
+        "station": "북부",
+        "crime_type": "경찰서",
+        "murder": "1",
+        "robbery": "1",
+        "sexual_crime": "45",
+        "theft": "939",
+        "violence": "848",
+        "year": "2022"
+    },
+    {
+        "station": "기장",
+        "crime_type": "경찰서",
+        "murder": "2",
+        "robbery": "1",
+        "sexual_crime": "43",
+        "theft": "463",
+        "violence": "587",
+        "year": "2022"
+    },
+    {
+        "station": "중부",
+        "crime_type": "경찰서",
+        "murder": "2",
+        "robbery": "1",
+        "sexual_crime": "41",
+        "theft": "657",
+        "violence": "701",
+        "year": "2023"
+    },
+    {
+        "station": "동래",
+        "crime_type": "경찰서",
+        "murder": "1",
+        "robbery": "0",
+        "sexual_crime": "104",
+        "theft": "1320",
+        "violence": "1250",
+        "year": "2023"
+    },
+    {
+        "station": "영도",
+        "crime_type": "경찰서",
+        "murder": "5",
+        "robbery": "1",
+        "sexual_crime": "39",
+        "theft": "466",
+        "violence": "568",
+        "year": "2023"
+    },
+    {
+        "station": "동부",
+        "crime_type": "경찰서",
+        "murder": "4",
+        "robbery": "5",
+        "sexual_crime": "52",
+        "theft": "545",
+        "violence": "747",
+        "year": "2023"
+    },
+    {
+        "station": "부산진",
+        "crime_type": "경찰서",
+        "murder": "5",
+        "robbery": "6",
+        "sexual_crime": "347",
+        "theft": "2577",
+        "violence": "2681",
+        "year": "2023"
+    },
+    {
+        "station": "서부",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "2",
+        "sexual_crime": "30",
+        "theft": "720",
+        "violence": "498",
+        "year": "2023"
+    },
+    {
+        "station": "남부",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "2",
+        "sexual_crime": "197",
+        "theft": "1137",
+        "violence": "1690",
+        "year": "2023"
+    },
+    {
+        "station": "해운대",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "4",
+        "sexual_crime": "137",
+        "theft": "1561",
+        "violence": "1423",
+        "year": "2023"
+    },
+    {
+        "station": "사상",
+        "crime_type": "경찰서",
+        "murder": "6",
+        "robbery": "3",
+        "sexual_crime": "73",
+        "theft": "950",
+        "violence": "1031",
+        "year": "2023"
+    },
+    {
+        "station": "금정",
+        "crime_type": "경찰서",
+        "murder": "4",
+        "robbery": "0",
+        "sexual_crime": "80",
+        "theft": "880",
+        "violence": "832",
+        "year": "2023"
+    },
+    {
+        "station": "사하",
+        "crime_type": "경찰서",
+        "murder": "2",
+        "robbery": "0",
+        "sexual_crime": "102",
+        "theft": "941",
+        "violence": "1278",
+        "year": "2023"
+    },
+    {
+        "station": "연제",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "2",
+        "sexual_crime": "98",
+        "theft": "1163",
+        "violence": "1402",
+        "year": "2023"
+    },
+    {
+        "station": "강서",
+        "crime_type": "경찰서",
+        "murder": "2",
+        "robbery": "0",
+        "sexual_crime": "56",
+        "theft": "477",
+        "violence": "618",
+        "year": "2023"
+    },
+    {
+        "station": "북부",
+        "crime_type": "경찰서",
+        "murder": "6",
+        "robbery": "0",
+        "sexual_crime": "93",
+        "theft": "1012",
+        "violence": "959",
+        "year": "2023"
+    },
+    {
+        "station": "기장",
+        "crime_type": "경찰서",
+        "murder": "3",
+        "robbery": "1",
+        "sexual_crime": "55",
+        "theft": "640",
+        "violence": "773",
+        "year": "2023"
+    }
+]
