@@ -22,23 +22,14 @@ police_station_locations = {
 }
 
 def get_crime_data(crime_type):
-    crimes = CrimesCrimedata.objects.all()
-    crime_dict = []
-    for crime in crimes:
-        if crime.station in police_station_locations:
-            crime_dict.append({
-                'station': crime.station,
-                'count': getattr(crime, crime_type),
-                'year': crime.year,
-                'lat': police_station_locations[crime.station]['lat'],
-                'lng': police_station_locations[crime.station]['lng']
-            })
+    filtered_data = df[df['crime_type'] == crime_type]
+    crime_dict = filtered_data.to_dict(orient='records')
     return crime_dict
 
 def get_crime_details(crime_type, year, station):
-    crime = CrimesCrimedata.objects.filter(year=year, station=station).first()
-    if crime:
-        crime_count = getattr(crime, crime_type)
+    filtered_data = df[(df['year'] == int(year)) & (df['district'] == station) & (df['crime_type'] == crime_type)]
+    if not filtered_data.empty:
+        crime_count = filtered_data.iloc[0]['count']
         position = police_station_locations.get(station, {'lat': 0, 'lng': 0})
         return {'count': crime_count, 'position': position}
     else:
