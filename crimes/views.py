@@ -29,8 +29,10 @@ def search_crime_data_view(request):
         crime_data_json = list(crime_data.values())  # JSON 형태로 변환
 
         if not crime_data_json:
-            return render(request, 'crimes/search_results.html',
-                          {'message': 'No data found for the given region', 'region': region})
+            return render(request, 'crimes/search_results.html', {
+                'message': 'No data found for the given region',
+                'region': region
+            })
 
         # 범죄 유형별 합산 데이터를 계산합니다.
         total_data = {
@@ -64,10 +66,10 @@ def add_crime_data_view(request):
         crime_type = request.POST.get('crime_type')
         year = request.POST.get('year')
         count = request.POST.get('count')
-        CrimeDataSystem.add_crime_data(station, crime_type, year, count)
+
         if not station or not crime_type or not year or not count:
             return render(request, 'crimes/add_crime_data.html', {
-                'message': 'All fields are required. Please provide all the necessary information.',
+                'message': 'No addition data found for the given region',
             })
         return render(request, 'crimes/add_success.html')
     return render(request, 'crimes/add_crime_data.html')
