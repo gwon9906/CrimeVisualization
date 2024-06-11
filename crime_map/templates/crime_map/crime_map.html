@@ -224,7 +224,7 @@
         <!-- 메소드 이름: Robberyonclick -->
       </div>
       <div id="map"></div>
-      {% include "crime_map/partials/map_delay.html" %}
+      <div id="loading" class="loading">Loading...</div>
       <div id="status" class="status">Select a crime type</div>
     </div>
 
@@ -325,6 +325,9 @@
             this.highlightRegion(this.selectedCrimeType, year, station); // 메소드 이름: highlightRegion
           }
         }
+        setSelectedCrimeType(crimeType) {
+      this.selectedCrimeType = crimeType;
+  }
 
         highlightRegion(crimeType, year, station) {
           // 메소드 이름: highlightRegion
@@ -360,6 +363,9 @@
 
         ClickCircle(crimeType) {
           // 메소드 이름: ClickCircle
+          const year = document.getElementById("year-select").value;
+          const station = document.getElementById("police-station-select").value;
+
           $.getJSON(`/crime_map/crime_data/${crimeType}`, (crimeData) => {
             this.circles.forEach((circle) => {
               circle.setMap(null);
@@ -370,34 +376,36 @@
             const color = this.crimeColors[crimeType];
 
             crimeData.forEach((crime) => {
-              const intensity = crime.count / maxCount;
-              const fillColor = this.adjustColorIntensity(color, intensity);
-              const radius = Math.sqrt(crime.count) * 60; // 반경 조정
+              if (crime.year == year && crime.station == station) {
+                const intensity = crime.count / maxCount;
+                const fillColor = this.adjustColorIntensity(color, intensity);
+                const radius = Math.sqrt(crime.count) * 60; // 반경 조정
 
-              const circle = new google.maps.Circle({
-                strokeColor: fillColor,
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: fillColor,
-                fillOpacity: 0.35,
-                map: this.mapView,
-                center: { lat: crime.lat, lng: crime.lng },
-                radius: radius,
-              });
+                const circle = new google.maps.Circle({
+                  strokeColor: fillColor,
+                  strokeOpacity: 0.8,
+                  strokeWeight: 2,
+                  fillColor: fillColor,
+                  fillOpacity: 0.35,
+                  map: this.mapView,
+                  center: { lat: crime.lat, lng: crime.lng },
+                  radius: radius,
+                });
 
-              circle.addListener("click", () => {
-                const showDetails = confirm("상세 정보를 보시겠습니까?");
-                if (showDetails) {
-                  const content = `<b>범죄 유형:</b> ${crimeType}<br><b>발생 횟수:</b> ${crime.count}<br><b>위치:</b> (${crime.lat}, ${crime.lng})`;
-                  const infowindow = new google.maps.InfoWindow({
-                    content: content,
-                  });
-                  infowindow.setPosition(circle.getCenter());
-                  infowindow.open(this.mapView);
-                }
-              });
+                circle.addListener("click", () => {
+                  const showDetails = confirm("상세 정보를 보시겠습니까?");
+                  if (showDetails) {
+                    const content = `<b>범죄 유형:</b> ${crimeType}<br><b>발생 횟수:</b> ${crime.count}<br><b>위치:</b> (${crime.lat}, ${crime.lng})`;
+                    const infowindow = new google.maps.InfoWindow({
+                      content: content,
+                    });
+                    infowindow.setPosition(circle.getCenter());
+                    infowindow.open(this.mapView);
+                  }
+                });
 
-              this.circles.push(circle);
+                this.circles.push(circle);
+              }
             });
 
             this.mapView.data.setStyle((feature) => {
@@ -411,8 +419,8 @@
               const intensity = count / maxCount;
               const fillColor = this.adjustColorIntensity(color, intensity);
               return {
-                fillColor: "transparent", // 기본 회색 색상
-                fillOpacity: count > 0 ? 0.5 : 0.5, // 불투명도 유지
+                fillColor: "transparent",
+                fillOpacity: count > 0 ? 0.5 : 0.5,
                 strokeColor: "grey",
                 strokeWeight: 1,
               };
@@ -420,76 +428,6 @@
 
             document.getElementById("status").innerText =
               crimeType + " 필터가 적용 중 입니다";
-          }).fail(function () {
-            alert("데이터를 가져오는데 실패했습니다.");
-          });
-        }
-
-        showCrimeMarkers() {
-          // 메소드 이름: showCrimeMarkers
-          const year = document.getElementById("year-select").value;
-          const station = document.getElementById("police-station-select").value;
-
-          $.getJSON(`/crime_map/crime_data/${this.selectedCrimeType}`, (crimeData) => {
-            this.circles.forEach((circle) => {
-              circle.setMap(null);
-            });
-            this.circles = [];
-
-            const maxCount = Math.max(...crimeData.map((crime) => crime.count));
-            const color = this.crimeColors[this.selectedCrimeType];
-
-            crimeData.forEach((crime) => {
-              const intensity = crime.count / maxCount;
-              const fillColor = this.adjustColorIntensity(color, intensity);
-              const radius = Math.sqrt(crime.count) * 60; // 반경 조정
-
-              const circle = new google.maps.Circle({
-                strokeColor: fillColor,
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: fillColor,
-                fillOpacity: 0.2, // 불투명도 조정
-                map: this.mapView,
-                center: { lat: crime.lat, lng: crime.lng },
-                radius: radius,
-              });
-
-              circle.addListener("click", () => {
-                const showDetails = confirm("상세 정보를 보시겠습니까?");
-                if (showDetails) {
-                  const content = `<b>범죄 유형:</b> ${this.selectedCrimeType}<br><b>발생 횟수:</b> ${crime.count}<br><b>위치:</b> (${crime.lat}, ${crime.lng})`;
-                  const infowindow = new google.maps.InfoWindow({
-                    content: content,
-                  });
-                  infowindow.setPosition(circle.getCenter());
-                  infowindow.open(this.mapView);
-                }
-              });
-
-              this.circles.push(circle);
-            });
-
-            this.mapView.data.setStyle((feature) => {
-              const district = feature.getProperty("name");
-              let count = 0;
-              for (let i = 0; i < crimeData.length; i++) {
-                if (crimeData[i].district === district) {
-                  count += crimeData[i].count;
-                }
-              }
-              const intensity = count / maxCount;
-              const fillColor = this.adjustColorIntensity(color, intensity);
-              return {
-                fillColor: "transparent", // 기본 회색 색상
-                fillOpacity: count > 0 ? 0.2 : 0.2, // 불투명도 유지
-                strokeColor: "grey",
-                strokeWeight: 1,
-              };
-            });
-
-            document.getElementById("status").innerText =
-              this.selectedCrimeType + " 필터가 적용 중 입니다";
           }).fail(function () {
             alert("데이터를 가져오는데 실패했습니다.");
           });
@@ -557,6 +495,13 @@
           );
         }
       }
+      /*displayCrimeDetail(crimeId) {
+    $.getJSON(`/crime_map/crime_detail/${crimeId}`, (data) => {
+      const content = `<b>범죄 ID:</b> ${crimeId}<br><b>발생 횟수:</b> ${data.count}<br><b>위치:</b> (${data.position.lat}, ${data.position.lng})`;
+      const infowindow = new google.maps.InfoWindow({
+        content: content,
+      });*/
+    
 
       const crimeMapUI = new CrimeMapUI();
 
