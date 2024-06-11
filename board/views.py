@@ -6,7 +6,7 @@ from .forms import PostForm
 
 
 def post_list(request):
-    posts = Post.objects.all()
+    posts = Post.objects.all().order_by('-created_at')  # created_at 필드를 기준으로 역순 정렬
     return render(request, 'board/post_list.html', {'posts': posts})
 
 
