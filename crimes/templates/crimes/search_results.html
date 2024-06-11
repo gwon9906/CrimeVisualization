@@ -127,46 +127,54 @@
       </div>
     </section>
 
-    <div id="charts">
-      <canvas id="crimeChart"></canvas>
-      <canvas id="crimeLineChart" class="mt-8" style="display: none"></canvas>
-    </div>
+    <!-- 데이터가 없을 때 메시지를 표시 -->
+    {% if message %}
+      <p class="text-center text-red-500">{{ message }}</p>
+    {% endif %}
 
-    <div class="flex flex-col items-center justify-center">
-      <select
-        id="yearSelect"
-        class="inline-flex items-center px-4 py-3 text-sm font-medium text-gray-800 bg-white border border-gray-200 rounded-lg shadow-sm gap-x-2 w-800"
-      >
-        <option value="" disabled selected hidden class="text-gray-400">
-          연도 선택
-        </option>
-        {% for year in years %}
-        <option value="{{ year }}">{{ year }}</option>
-        {% endfor %}
-      </select>
-      <br />
-      <br />
-      <select
-        id="crimeTypeSelect"
-        class="inline-flex items-center px-4 py-3 text-sm font-medium text-gray-800 bg-white border border-gray-200 rounded-lg shadow-sm gap-x-2 w-800"
-      >
-        <option value="" disabled selected hidden class="text-gray-400">
-          범죄 유형 선택
-        </option>
-        <option value="murder">살인</option>
-        <option value="robbery">강도</option>
-        <option value="sexual_crime">성범죄</option>
-        <option value="theft">절도</option>
-        <option value="violence">폭력</option>
-      </select>
-      <br />
-      <button
-        id="loadMore"
-        class="px-4 py-2 mt-2 text-sm font-medium text-white bg-blue-600 rounded-lg w-400 hover:bg-blue-700 focus:ring-4 focus:outline-none"
-      >
-        더 보기
-      </button>
-    </div>
+    <!-- 데이터가 있을 때 차트를 표시 -->
+    {% if crime_data %}
+      <div id="charts">
+        <canvas id="crimeChart"></canvas>
+        <canvas id="crimeLineChart" class="mt-8" style="display: none"></canvas>
+      </div>
+
+      <div class="flex flex-col items-center justify-center">
+        <select
+          id="yearSelect"
+          class="inline-flex items-center px-4 py-3 text-sm font-medium text-gray-800 bg-white border border-gray-200 rounded-lg shadow-sm gap-x-2 w-800"
+        >
+          <option value="" disabled selected hidden class="text-gray-400">
+            연도 선택
+          </option>
+          {% for year in years %}
+          <option value="{{ year }}">{{ year }}</option>
+          {% endfor %}
+        </select>
+        <br />
+        <br />
+        <select
+          id="crimeTypeSelect"
+          class="inline-flex items-center px-4 py-3 text-sm font-medium text-gray-800 bg-white border border-gray-200 rounded-lg shadow-sm gap-x-2 w-800"
+        >
+          <option value="" disabled selected hidden class="text-gray-400">
+            범죄 유형 선택
+          </option>
+          <option value="murder">살인</option>
+          <option value="robbery">강도</option>
+          <option value="sexual_crime">성범죄</option>
+          <option value="theft">절도</option>
+          <option value="violence">폭력</option>
+        </select>
+        <br />
+        <button
+          id="loadMore"
+          class="px-4 py-2 mt-2 text-sm font-medium text-white bg-blue-600 rounded-lg w-400 hover:bg-blue-700 focus:ring-4 focus:outline-none"
+        >
+          더 보기
+        </button>
+      </div>
+    {% endif %}
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>

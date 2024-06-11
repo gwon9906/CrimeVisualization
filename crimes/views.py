@@ -5,8 +5,12 @@ import datetime
 
 class CrimeDataSystem:
     @staticmethod
-    def search_crime_data(region):
+    def getData(region):
         return CrimeData.objects.filter(station__icontains=region)
+
+    @staticmethod
+    def search_crime_data(region):
+        return CrimeDataSystem.getData(region)
 
     @staticmethod
     def add_crime_data(station, crime_type, year, count):
