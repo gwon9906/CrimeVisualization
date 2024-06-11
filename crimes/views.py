@@ -5,7 +5,9 @@ import datetime
 
 class CrimeDataSystem:
     @staticmethod
-    def getData(region):
+    def getData(region, year=None):
+        if year:
+            return CrimeData.objects.filter(station__icontains=region, year=year)
         return CrimeData.objects.filter(station__icontains=region)
 
     @staticmethod
@@ -13,19 +15,10 @@ class CrimeDataSystem:
         return CrimeDataSystem.getData(region)
 
     @staticmethod
-    def add_crime_data(station, crime_type, year, count):
-        return CrimeData.objects.create(
-            station=station,
-            crime_type=crime_type,
-            year=year,
-            count=count,
-        )
-
-    @staticmethod
     def additional_data(region, year):
-        return CrimeData.objects.filter(station__icontains=region, year=year)
+        return CrimeDataSystem.getData(region, year)
 
-
+# View 함수
 def search_crime_data_view(request):
     if request.method == 'POST':
         region = request.POST.get('region')
@@ -64,21 +57,7 @@ def search_crime_data_view(request):
                        'yearly_data': yearly_data})
     return render(request, 'crimes/search.html')
 
-def add_crime_data_view(request):
-    if request.method == 'POST':
-        station = request.POST.get('station')
-        crime_type = request.POST.get('crime_type')
-        year = request.POST.get('year')
-        count = request.POST.get('count')
-
-        if not station or not crime_type or not year or not count:
-            return render(request, 'crimes/add_crime_data.html', {
-                'message': 'No addition data found for the given region',
-            })
-        return render(request, 'crimes/add_success.html')
-    return render(request, 'crimes/add_crime_data.html')
-
 def get_crime_data_by_year(request, region, year):
-    crime_data = CrimeData.objects.filter(station__icontains=region, year=year)
+    crime_data = CrimeDataSystem.getData(region, year)
     crime_data_json = list(crime_data.values())  # JSON 형태로 변환
     return JsonResponse(crime_data_json, safe=False)
