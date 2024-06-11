@@ -1,11 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-import pandas as pd
-import os
-
-# CSV 파일 경로 설정
-CSV_FILE_PATH = os.path.join(os.path.dirname(__file__), 'data', 'crime_data.csv')
-df = pd.read_csv(CSV_FILE_PATH)
+from .models import CrimesCrimedata
 
 # 경찰서의 위치 정보를 사전으로 정의합니다
 police_station_locations = {
@@ -27,14 +22,23 @@ police_station_locations = {
 }
 
 def get_crime_data(crime_type):
-    filtered_data = df[df['crime_type'] == crime_type]
-    crime_dict = filtered_data.to_dict(orient='records')
+    crimes = CrimesCrimedata.objects.all()
+    crime_dict = []
+    for crime in crimes:
+        if crime.station in police_station_locations:
+            crime_dict.append({
+                'station': crime.station,
+                'count': getattr(crime, crime_type),
+                'year': crime.year,
+                'lat': police_station_locations[crime.station]['lat'],
+                'lng': police_station_locations[crime.station]['lng']
+            })
     return crime_dict
 
 def get_crime_details(crime_type, year, station):
-    filtered_data = df[(df['year'] == int(year)) & (df['district'] == station) & (df['crime_type'] == crime_type)]
-    if not filtered_data.empty:
-        crime_count = filtered_data.iloc[0]['count']
+    crime = CrimesCrimedata.objects.filter(year=year, station=station).first()
+    if crime:
+        crime_count = getattr(crime, crime_type)
         position = police_station_locations.get(station, {'lat': 0, 'lng': 0})
         return {'count': crime_count, 'position': position}
     else:
@@ -44,9 +48,23 @@ def index(request):
     return render(request, 'crime_map/crime_map.html')
 
 def crime_data(request, crime_type):
-    data = get_crime_data(crime_type)
+    crime_type_mapping = {
+        "폭력": "violence",
+        "성범죄": "sexual_crime",
+        "절도": "theft",
+        "살인": "murder",
+        "강도": "robbery"
+    }
+    data = get_crime_data(crime_type_mapping[crime_type])
     return JsonResponse(data, safe=False)
 
 def crime_details(request, crime_type, year, station):
-    data = get_crime_details(crime_type, year, station)
+    crime_type_mapping = {
+        "폭력": "violence",
+        "성범죄": "sexual_crime",
+        "절도": "theft",
+        "살인": "murder",
+        "강도": "robbery"
+    }
+    data = get_crime_details(crime_type_mapping[crime_type], year, station)
     return JsonResponse(data)

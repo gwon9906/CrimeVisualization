@@ -1,0 +1,14 @@
+<div id="loading" class="loading">지도를 로드하는 중입니다. 잠시만 기다려 주세요.</div>
+<div id="load-fail" class="loading" style="display:none;">지도를 로드하는 데 실패했습니다. 다시 시도해 주세요.</div>
+
+<script>
+  // 일정 시간(예: 10초) 후에 로딩 실패 메시지로 변경
+  setTimeout(function() {
+    var loadingElement = document.getElementById('loading');
+    var loadFailElement = document.getElementById('load-fail');
+    if (loadingElement.classList.contains('active')) {
+      loadingElement.style.display = 'none';
+      loadFailElement.style.display = 'block';
+    }
+  }, 10000); // 10초 (10000 밀리초)
+</script>
