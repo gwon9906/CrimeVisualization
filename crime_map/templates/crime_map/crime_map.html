@@ -269,7 +269,7 @@
           this.showCrimeTypes(); // 메소드 이름: showCrimeTypes
 
           // 로딩 메시지 숨김
-          google.maps.event.addListenerOnce(this.mapView, 'tilesloaded', () => {
+          google.maps.event.addListenerOnce(this.mapView, "tilesloaded", () => {
             document.getElementById("loading").classList.remove("active");
           });
         }
@@ -278,6 +278,7 @@
           // 메소드 이름: showCrimeTypes
           const years = [2018, 2019, 2020, 2021, 2022, 2023];
           const policeStations = [
+            "부산전체",
             "중부",
             "동래",
             "영도",
@@ -325,12 +326,18 @@
             this.highlightRegion(this.selectedCrimeType, year, station); // 메소드 이름: highlightRegion
           }
         }
+
         setSelectedCrimeType(crimeType) {
-      this.selectedCrimeType = crimeType;
-  }
+          this.selectedCrimeType = crimeType;
+        }
 
         highlightRegion(crimeType, year, station) {
           // 메소드 이름: highlightRegion
+          if (station === "부산전체") {
+            // 처리 로직 추가
+            this.showBusanOverall(crimeType, year);
+            return;
+          }
           $.getJSON(
             `/crime_map/crime_details/${crimeType}/${year}/${station}`,
             (data) => {
@@ -364,7 +371,9 @@
         ClickCircle(crimeType) {
           // 메소드 이름: ClickCircle
           const year = document.getElementById("year-select").value;
-          const station = document.getElementById("police-station-select").value;
+          const station = document.getElementById(
+            "police-station-select"
+          ).value;
 
           $.getJSON(`/crime_map/crime_data/${crimeType}`, (crimeData) => {
             this.circles.forEach((circle) => {
@@ -376,7 +385,10 @@
             const color = this.crimeColors[crimeType];
 
             crimeData.forEach((crime) => {
-              if (crime.year == year && crime.station == station) {
+              if (
+                crime.year == year &&
+                (crime.station == station || station === "부산전체")
+              ) {
                 const intensity = crime.count / maxCount;
                 const fillColor = this.adjustColorIntensity(color, intensity);
                 const radius = Math.sqrt(crime.count) * 60; // 반경 조정
@@ -395,7 +407,75 @@
                 circle.addListener("click", () => {
                   const showDetails = confirm("상세 정보를 보시겠습니까?");
                   if (showDetails) {
-                    const content = `<b>범죄 유형:</b> ${crimeType}<br><b>발생 횟수:</b> ${crime.count}<br><b>위치:</b> (${crime.lat}, ${crime.lng})`;
+                    const content = `<b>범죄 유형:</b> ${crimeType}<br><b>발생 횟수:</b> ${crime.count}<br><b>위치:</b> (${crime.lat}, ${crime.lng})<br><b>연도:</b> ${crime.year}`;
+                    const infowindow = new google.maps.InfoWindow({
+                      content: content,
+                    });
+                    infowindow.setPosition(circle.getCenter());
+                    infowindow.open(this.mapView);
+                  }
+                });
+
+                this.circles.push(circle);
+              }
+            });
+
+            this.mapView.data.setStyle((feature) => {
+              const district = feature.getProperty("name");
+              let count = 0;
+              for (let i = 0; i < crimeData.length; i++) {
+                if (crimeData[i].district === district) {
+                  count += crimeData[i].count;
+                }
+              }
+              const intensity = count / maxCount;
+              const fillColor = this.adjustColorIntensity(color, intensity);
+              return {
+                fillColor: "transparent",
+                fillOpacity: count > 0 ? 0.5 : 0.5,
+                strokeColor: "grey",
+                strokeWeight: 1,
+              };
+            });
+
+            document.getElementById("status").innerText =
+              crimeType + " 필터가 적용 중 입니다";
+          }).fail(function () {
+            alert("데이터를 가져오는데 실패했습니다.");
+          });
+        }
+
+        showBusanOverall(crimeType, year) {
+          $.getJSON(`/crime_map/crime_data/${crimeType}`, (crimeData) => {
+            this.circles.forEach((circle) => {
+              circle.setMap(null);
+            });
+            this.circles = [];
+
+            const maxCount = Math.max(...crimeData.map((crime) => crime.count));
+            const color = this.crimeColors[crimeType];
+
+            crimeData.forEach((crime) => {
+              if (crime.year == year) {
+                const intensity = crime.count / maxCount;
+                const fillColor = this.adjustColorIntensity(color, intensity);
+                const radius = Math.sqrt(crime.count) * 60; // 반경 조정
+
+                const circle = new google.maps.Circle({
+                  strokeColor: fillColor,
+                  strokeOpacity: 0.8,
+                  strokeWeight: 2,
+                  fillColor: fillColor,
+                  fillOpacity: 0.35,
+                  map: this.mapView,
+                  center: { lat: crime.lat, lng: crime.lng },
+                  radius: radius,
+                });
+
+                circle.addListener("click", () => {
+                  const showDetails = confirm("상세 정보를 보시겠습니까?");
+                  if (showDetails) {
+                    const content = `<b>범죄 유형:</b> ${crimeType}<br><b>발생 횟수:</b> ${crime.count}<br><b>위치:</b> (${crime.lat}, ${crime.lng})<br><b>연도:</b> ${crime.year}`;
                     const infowindow = new google.maps.InfoWindow({
                       content: content,
                     });
@@ -494,39 +574,52 @@
             "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
           );
         }
+
+        displayCrimeDetail(crimeId) {
+          $.getJSON(`/crime_map/crime_detail/${crimeId}`, (data) => {
+            const content = `<b>범죄 ID:</b> ${crimeId}<br><b>발생 횟수:</b> ${data.count}<br><b>위치:</b> (${data.position.lat}, ${data.position.lng})<br><b>연도:</b> ${data.year}`;
+            const infowindow = new google.maps.InfoWindow({
+              content: content,
+            });
+
+            infowindow.setPosition({
+              lat: data.position.lat,
+              lng: data.position.lng,
+            });
+            infowindow.open(this.mapView);
+          });
+        }
       }
-      /*displayCrimeDetail(crimeId) {
-    $.getJSON(`/crime_map/crime_detail/${crimeId}`, (data) => {
-      const content = `<b>범죄 ID:</b> ${crimeId}<br><b>발생 횟수:</b> ${data.count}<br><b>위치:</b> (${data.position.lat}, ${data.position.lng})`;
-      const infowindow = new google.maps.InfoWindow({
-        content: content,
-      });*/
-    
 
       const crimeMapUI = new CrimeMapUI();
 
       function Theftonclick() {
         // 메소드 이름: Theftonclick
+        crimeMapUI.setSelectedCrimeType("절도");
         crimeMapUI.ClickCircle("절도"); // 메소드 이름: ClickCircle
       }
 
       function Robberyonclick() {
         // 메소드 이름: Robberyonclick
+        crimeMapUI.setSelectedCrimeType("강도");
         crimeMapUI.ClickCircle("강도"); // 메소드 이름: ClickCircle
       }
 
       function sexualViolenceonclick() {
         // 메소드 이름: sexualViolenceonclick
+        crimeMapUI.setSelectedCrimeType("성범죄");
         crimeMapUI.ClickCircle("성범죄"); // 메소드 이름: ClickCircle
       }
 
       function murderonclick() {
         // 메소드 이름: murderonclick
+        crimeMapUI.setSelectedCrimeType("살인");
         crimeMapUI.ClickCircle("살인"); // 메소드 이름: ClickCircle
       }
 
       function Violenceonclick() {
         // 메소드 이름: Violenceonclick
+        crimeMapUI.setSelectedCrimeType("폭력");
         crimeMapUI.ClickCircle("폭력"); // 메소드 이름: ClickCircle
       }
 

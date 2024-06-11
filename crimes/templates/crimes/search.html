@@ -86,7 +86,11 @@
           시각화 된 범죄 데이터 및 정보를 제공
         </h1>
 
-        <form class="max-w-md mx-auto" method="post" action="{% url 'search_crime_data' %}">
+        <form
+          class="max-w-md mx-auto"
+          method="post"
+          action="{% url 'search_crime_data' %}"
+        >
           {% csrf_token %}
           <div class="relative">
             <div
