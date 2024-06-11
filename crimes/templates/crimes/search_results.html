@@ -7,6 +7,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>부산 치안 지킴이</title>
+    <style>
+      #charts {
+        max-width: 800px;
+        margin: auto;
+      }
+      #charts canvas {
+        margin-top: 20px;
+      }
+    </style>
 </head>
 <body class="bg-gray-900">
     <nav class="bg-gray-900 border-b-4 border-indigo-500">
@@ -15,6 +24,7 @@
                 <img src="https://wikiwandv2-19431.kxcdn.com/_next/image?url=https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Korean_National_Police_Agency_Emblem.svg/langko-640px-Korean_National_Police_Agency_Emblem.svg.png&w=640&q=50" class="h-8" alt="police_png" />
                 <span class="self-center text-2xl font-semibold text-white whitespace-nowrap">부산 치안 지킴이</span>
             </a>
+
             <div class="hidden w-full md:block md:w-auto" id="navbar-default">
                 <ul class="flex flex-col p-4 mt-4 font-medium bg-gray-900 border border-gray-700 rounded-lg md:p-0 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
                     <li class="mt-2">
@@ -29,7 +39,9 @@
                     <li class="mt-2">
                         <a href="#" class="block px-3 py-2 text-white rounded md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 hover:text-white">대시보드</a>
                     </li>
-                    <li class="flex items-center space-x-4 mt-2" id="login-info"></li>
+                    <li class="flex items-center space-x-4 mt-2" id="login-info">
+                        <!-- 로그인 상태에 따라 내용이 변경될 부분 -->
+                    </li>
                 </ul>
             </div>
         </div>
@@ -37,74 +49,88 @@
 
     <section>
         <div class="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-16 lg:px-12">
-            <h1 class="mb-8 text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-5xl">시각화 된 범죄 데이터 및 정보를 제공</h1>
+            <h1 class="mb-8 text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-5xl">
+                시각화 된 범죄 데이터 및 정보를 제공
+            </h1>
+
+            <form class="max-w-md mx-auto" method="post" action="{% url 'search_crime_data' %}">
+                {% csrf_token %}
+                <div class="relative">
+                    <div class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3"></div>
+                    <input type="text" name="region" id="region" class="block w-full p-4 text-sm placeholder-gray-400 bg-gray-700 border border-gray-600 rounded-lg ps-10 focus:ring-blue-500 focus:border-blue-500" placeholder="지역, 키워드를 입력해주세요.." required />
+                    <button type="submit" class="text-white absolute end-2.5 bottom-2.5 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-blue-800">
+                        검색
+                    </button>
+                </div>
+            </form>
         </div>
     </section>
 
-    <div class="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-16 lg:px-12">
-        {% if message %}
-            <div class="text-white">
-                {{ message }}
-            </div>
-        {% else %}
-            <canvas id="crimeChart"></canvas>
-            <div class="mt-4">
-                <select id="yearSelect" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">
-                    {% for year in years %}
-                        <option value="{{ year }}">{{ year }}</option>
-                    {% endfor %}
-                </select>
-                <button id="loadMore" class="ml-2 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-4 py-2">더 보기</button>
-            </div>
-        {% endif %}
+    <div id="charts">
+        <canvas id="crimeChart"></canvas>
+        <canvas id="crimeLineChart" class="mt-8" style="display: none;"></canvas>
     </div>
 
+    <div>
+        <label for="yearSelect" class="block text-white mt-4">연도 선택:</label>
+        <select id="yearSelect" class="block w-1/2 mx-auto mt-2">
+            {% for year in years %}
+                <option value="{{ year }}">{{ year }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="crimeTypeSelect" class="block text-white mt-4">범죄 유형 선택:</label>
+        <select id="crimeTypeSelect" class="block w-1/2 mx-auto mt-2">
+            <option value="murder">살인</option>
+            <option value="robbery">강도</option>
+            <option value="sexual_crime">성범죄</option>
+            <option value="theft">절도</option>
+            <option value="violence">폭력</option>
+        </select>
+
+        <button id="loadMore" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-4 py-2 mt-2">
+            더 보기
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
-            const crimeData = {{ crime_data|safe }};
+            const crimeData = {{ total_data|safe }};
             const region = "{{ region }}";
-            const chartData = processData(crimeData);
+            const yearlyData = {{ yearly_data|safe }};
             let crimeChart;
+            let crimeLineChart;
 
-            function processData(data) {
-                return {
-                    labels: ['살인', '강도', '성범죄', '절도', '폭력'],
-                    datasets: [{
-                        label: '범죄 수',
-                        data: [
-                            data.reduce((acc, crime) => acc + crime.murder, 0),
-                            data.reduce((acc, crime) => acc + crime.robbery, 0),
-                            data.reduce((acc, crime) => acc + crime.sexual_crime, 0),
-                            data.reduce((acc, crime) => acc + crime.theft, 0),
-                            data.reduce((acc, crime) => acc + crime.violence, 0)
-                        ],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                };
-            }
-
-            function createChart(data) {
+            function createBarChart(data) {
                 const ctx = document.getElementById('crimeChart').getContext('2d');
                 if (crimeChart) {
                     crimeChart.destroy();
                 }
                 crimeChart = new Chart(ctx, {
                     type: 'bar',
-                    data: data,
+                    data: {
+                        labels: ['살인', '강도', '성범죄', '절도', '폭력'],
+                        datasets: [{
+                            label: '범죄 수',
+                            data: [data.murder, data.robbery, data.sexual_crime, data.theft, data.violence],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
                     options: {
                         scales: {
                             y: {
@@ -115,17 +141,116 @@
                 });
             }
 
-            createChart(chartData);
+            function createLineChart(data) {
+                const ctx = document.getElementById('crimeLineChart').getContext('2d');
+                if (crimeLineChart) {
+                    crimeLineChart.destroy();
+                }
+                crimeLineChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['2018', '2019', '2020', '2021', '2022', '2023'],
+                        datasets: [{
+                            label: '범죄 추이',
+                            data: data,
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            createBarChart(crimeData);
 
             document.getElementById('loadMore').addEventListener('click', () => {
                 const selectedYear = document.getElementById('yearSelect').value;
+                const selectedCrimeType = document.getElementById('crimeTypeSelect').value;
                 fetch(`/crimes/search/${region}/${selectedYear}/`)
                     .then(response => response.json())
                     .then(data => {
-                        const newData = processData(data);
-                        createChart(newData);
+                        const newData = {
+                            murder: data.reduce((acc, crime) => acc + crime.murder, 0),
+                            robbery: data.reduce((acc, crime) => acc + crime.robbery, 0),
+                            sexual_crime: data.reduce((acc, crime) => acc + crime.sexual_crime, 0),
+                            theft: data.reduce((acc, crime) => acc + crime.theft, 0),
+                            violence: data.reduce((acc, crime) => acc + crime.violence, 0)
+                        };
+                        createBarChart(newData);
                     });
+
+                const filteredYearlyData = Object.values(yearlyData).map(year => year[selectedCrimeType]);
+                document.getElementById('crimeLineChart').style.display = 'block';
+                createLineChart(filteredYearlyData);
             });
+        });
+
+        // 로그인 상태를 확인하는 함수
+        async function isLoggedIn() {
+            try {
+                const response = await fetch("/api/userinfo", {
+                    method: "GET",
+                    credentials: "include",
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.isLoggedIn; // 서버에서 로그인 상태를 반환한다고 가정
+                } else {
+                    return false;
+                }
+            } catch (error) {
+                console.error("Error fetching login status:", error);
+                return false;
+            }
+        }
+
+        // 로그인된 유저의 정보를 가져오는 함수
+        async function getUserInfo() {
+            try {
+                const response = await fetch("/api/userinfo", {
+                    method: "GET",
+                    credentials: "include",
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.user; // 서버에서 유저 정보를 반환한다고 가정
+                } else {
+                    return null;
+                }
+            } catch (error) {
+                console.error("Error fetching user info:", error);
+                return null;
+            }
+        }
+
+        // 네비게이션 바의 로그인 정보 업데이트
+        document.addEventListener("DOMContentLoaded", async function () {
+            const loginInfoElement = document.getElementById("login-info");
+
+            if (await isLoggedIn()) {
+                const userInfo = await getUserInfo();
+                if (userInfo) {
+                    loginInfoElement.innerHTML = `
+                    <div class="relative w-10 h-10 overflow-hidden bg-gray-600 rounded-full">
+                        <svg class="absolute w-12 h-12 text-gray-400 -left-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <span class="text-white">${userInfo.id}</span>`;
+                }
+            } else {
+                loginInfoElement.innerHTML = `
+                <a href="/accounts/login/" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-800 px-4 py-2 rounded-lg">
+                    로그인
+                </a>`;
+            }
         });
     </script>
 </body>

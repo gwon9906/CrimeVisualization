@@ -17,6 +17,10 @@ class CrimeDataSystem:
             count=count,
         )
 
+    @staticmethod
+    def additional_data(region, year):
+        return CrimeData.objects.filter(station__icontains=region, year=year)
+
 
 def search_crime_data_view(request):
     if request.method == 'POST':
@@ -28,11 +32,30 @@ def search_crime_data_view(request):
             return render(request, 'crimes/search_results.html',
                           {'message': 'No data found for the given region', 'region': region})
 
-        current_year = datetime.datetime.now().year
-        years = list(range(current_year, current_year - 20, -1))
+        # 범죄 유형별 합산 데이터를 계산합니다.
+        total_data = {
+            'murder': sum(crime['murder'] for crime in crime_data_json),
+            'robbery': sum(crime['robbery'] for crime in crime_data_json),
+            'sexual_crime': sum(crime['sexual_crime'] for crime in crime_data_json),
+            'theft': sum(crime['theft'] for crime in crime_data_json),
+            'violence': sum(crime['violence'] for crime in crime_data_json)
+        }
+
+        # 범죄 유형별 연도별 데이터를 준비합니다.
+        yearly_data = {year: {'murder': 0, 'robbery': 0, 'sexual_crime': 0, 'theft': 0, 'violence': 0} for year in
+                       range(2018, 2024)}
+        for crime in crime_data_json:
+            yearly_data[crime['year']]['murder'] += crime['murder']
+            yearly_data[crime['year']]['robbery'] += crime['robbery']
+            yearly_data[crime['year']]['sexual_crime'] += crime['sexual_crime']
+            yearly_data[crime['year']]['theft'] += crime['theft']
+            yearly_data[crime['year']]['violence'] += crime['violence']
+
+        years = list(range(2023, 2017, -1))
 
         return render(request, 'crimes/search_results.html',
-                      {'crime_data': crime_data_json, 'region': region, 'years': years})
+                      {'total_data': total_data, 'region': region, 'years': years, 'crime_data': crime_data_json,
+                       'yearly_data': yearly_data})
     return render(request, 'crimes/search.html')
 
 def add_crime_data_view(request):
