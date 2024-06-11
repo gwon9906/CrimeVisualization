@@ -5,14 +5,14 @@ import datetime
 
 class CrimeDataSystem:
     @staticmethod
-    def getData(region, year=None):
-        if year:
-            return CrimeData.objects.filter(station__icontains=region, year=year)
-        return CrimeData.objects.filter(station__icontains=region)
+    def getData(region, year=None): # region과 year를 받아서 데이터를 가져옴
+        if year:    # year가 있으면 해당 year의 데이터를 가져옴
+            return CrimeData.objects.filter(station__icontains=region, year=year)   # station에 region이 포함되어 있는 데이터를 가져옴
+        return CrimeData.objects.filter(station__icontains=region)  # region에 해당하는 데이터를 가져옴
 
     @staticmethod
-    def search_crime_data(region):
-        return CrimeDataSystem.getData(region)
+    def search_crime_data(region):  # region을 받아서 데이터를 가져옴
+        return CrimeDataSystem.getData(region)  # getData 함수를 호출하여 region에 해당하는 데이터를 가져옴
 
     @staticmethod
     def additional_data(region, year):
