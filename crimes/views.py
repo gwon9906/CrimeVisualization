@@ -65,6 +65,10 @@ def add_crime_data_view(request):
         year = request.POST.get('year')
         count = request.POST.get('count')
         CrimeDataSystem.add_crime_data(station, crime_type, year, count)
+        if not station or not crime_type or not year or not count:
+            return render(request, 'crimes/add_crime_data.html', {
+                'message': 'All fields are required. Please provide all the necessary information.',
+            })
         return render(request, 'crimes/add_success.html')
     return render(request, 'crimes/add_crime_data.html')
 
